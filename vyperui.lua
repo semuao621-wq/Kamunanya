@@ -529,7 +529,7 @@ function Vyper:Window(GuiConfig)
 
     DropShadowHolder.Position = UDim2.new(0, (Vyper.AbsoluteSize.X // 2 - DropShadowHolder.Size.X.Offset // 2), 0,
         (Vyper.AbsoluteSize.Y // 2 - DropShadowHolder.Size.Y.Offset // 2))
-    DropShadow.Image = "rbxassetid://6015897843"
+    DropShadow.Image = "rbxassetid://107726435417936"
     DropShadow.ImageColor3 = Color3.fromRGB(15, 15, 15)
     DropShadow.ImageTransparency = 1
     DropShadow.ScaleType = Enum.ScaleType.Slice
@@ -2714,4 +2714,5 @@ end
 
 
 return Vyper
+
 

@@ -2579,14 +2579,23 @@ function Vyper:Window(GuiConfig)
                 SearchBox.Text = ""
                 SearchBox.TextSize = 12
                 SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-                SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-                SearchBox.BackgroundTransparency = 0.9
+                SearchBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                SearchBox.BackgroundTransparency = 0.92
                 SearchBox.BorderSizePixel = 0
                 SearchBox.Size = UDim2.new(1, 0, 0, 25)
                 SearchBox.Position = UDim2.new(0, 0, 0, 0)
                 SearchBox.ClearTextOnFocus = false
                 SearchBox.Name = "SearchBox"
                 SearchBox.Parent = DropdownContainer
+                
+                -- Add gradient to search box
+                local SearchGradient = Instance.new("UIGradient")
+                SearchGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                SearchGradient.Rotation = 45
+                SearchGradient.Parent = SearchBox
 
                 local ScrollSelect = Instance.new("ScrollingFrame")
                 ScrollSelect.Size = UDim2.new(1, 0, 1, -30)
@@ -2651,10 +2660,20 @@ function Vyper:Window(GuiConfig)
                     local UICorner38 = Instance.new("UICorner")
                     local UICorner37 = Instance.new("UICorner")
 
-                    Option.BackgroundTransparency = 1
+                    Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    Option.BackgroundTransparency = 0.999
                     Option.Size = UDim2.new(1, 0, 0, 30)
                     Option.Name = "Option"
                     Option.Parent = ScrollSelect
+                    
+                    -- Add gradient to option
+                    local OptionGradient = Instance.new("UIGradient")
+                    OptionGradient.Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                    })
+                    OptionGradient.Rotation = 45
+                    OptionGradient.Parent = Option
 
                     UICorner37.CornerRadius = UDim.new(0, 3)
                     UICorner37.Parent = Option
@@ -2732,7 +2751,7 @@ function Vyper:Window(GuiConfig)
                                     { Size = UDim2.new(0, 1, 0, 12) }):Play()
                                 TweenService:Create(Drop.ChooseFrame.UIStroke, TweenInfo.new(0.2), { Transparency = 0 })
                                     :Play()
-                                TweenService:Create(Drop, TweenInfo.new(0.2), { BackgroundTransparency = 0.935 }):Play()
+                                TweenService:Create(Drop, TweenInfo.new(0.2), { BackgroundTransparency = 0.92 }):Play()
                                 table.insert(texts, Drop.OptionText.Text)
                             else
                                 TweenService:Create(Drop.ChooseFrame, TweenInfo.new(0.1),

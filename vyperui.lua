@@ -794,26 +794,38 @@ function Vyper:Window(GuiConfig)
         Overlay.ZIndex = 50
         Overlay.Parent = DropShadowHolder
 
-        local Dialog = Instance.new("Frame") -- Changed to Frame for gradient
+        local Dialog = Instance.new("Frame")
         Dialog.Size = UDim2.new(0, 300, 0, 150)
         Dialog.Position = UDim2.new(0.5, -150, 0.5, -75)
         Dialog.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Dark purple base
-        Dialog.BackgroundTransparency = 0.1
+        Dialog.BackgroundTransparency = 0.15 -- Match Main Window Transparency
         Dialog.BorderSizePixel = 0
         Dialog.ZIndex = 51
         Dialog.Parent = Overlay
         local UICorner = Instance.new("UICorner", Dialog)
         UICorner.CornerRadius = UDim.new(0, 8)
         
-        -- Add purple-cyan gradient to dialog
+        -- Add Overlay for Vibrant Gradient (Match Main Window Style)
+        local DialogOverlay = Instance.new("Frame")
+        DialogOverlay.Size = UDim2.new(1, 0, 1, 0)
+        DialogOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White base for gradient
+        DialogOverlay.BackgroundTransparency = 0.3 -- Match Main Window Overlay Transparency
+        DialogOverlay.BorderSizePixel = 0
+        DialogOverlay.ZIndex = 51 -- Same ZIndex as container, but rendered on top of background
+        DialogOverlay.Name = "DialogOverlay"
+        DialogOverlay.Parent = Dialog
+        
+        local OverlayCorner = Instance.new("UICorner", DialogOverlay)
+        OverlayCorner.CornerRadius = UDim.new(0, 8)
+
         local DialogMainGradient = Instance.new("UIGradient")
         DialogMainGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0.0, Color3.fromRGB(80, 40, 120)),
             ColorSequenceKeypoint.new(0.5, Color3.fromRGB(138, 43, 226)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(100, 180, 255))
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 240, 255))
         })
         DialogMainGradient.Rotation = 135
-        DialogMainGradient.Parent = Dialog
+        DialogMainGradient.Parent = DialogOverlay
 
         local DialogGlow = Instance.new("Frame")
         DialogGlow.Size = UDim2.new(0, 310, 0, 160)
@@ -863,18 +875,18 @@ function Vyper:Window(GuiConfig)
         Yes.Size = UDim2.new(0.45, -10, 0, 35)
         Yes.Position = UDim2.new(0.05, 0, 1, -55)
         Yes.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Yes.BackgroundTransparency = 0.92
+        Yes.BackgroundTransparency = 0 -- Solid to make it pop!
         Yes.Text = "Yes"
         Yes.Font = Enum.Font.GothamBold
         Yes.TextSize = 15
         Yes.TextColor3 = Color3.fromRGB(255, 255, 255)
-        Yes.TextTransparency = 0.3
+        Yes.TextTransparency = 0
         Yes.ZIndex = 52
         Yes.Name = "Yes"
         Yes.Parent = Dialog
         Instance.new("UICorner", Yes).CornerRadius = UDim.new(0, 6)
         
-        -- Add gradient to Yes button
+        -- Add gradient to Yes button (Vibrant)
         local YesGradient = Instance.new("UIGradient")
         YesGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
@@ -882,30 +894,37 @@ function Vyper:Window(GuiConfig)
         })
         YesGradient.Rotation = 45
         YesGradient.Parent = Yes
+        
+        -- Add Stroke to Yes button for 3D pop
+        local YesStroke = Instance.new("UIStroke")
+        YesStroke.Color = Color3.fromRGB(255, 255, 255)
+        YesStroke.Thickness = 1
+        YesStroke.Transparency = 0.5
+        YesStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        YesStroke.Parent = Yes
 
         local Cancel = Instance.new("TextButton")
         Cancel.Size = UDim2.new(0.45, -10, 0, 35)
         Cancel.Position = UDim2.new(0.5, 10, 1, -55)
         Cancel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Cancel.BackgroundTransparency = 0.92
+        Cancel.BackgroundTransparency = 1 -- Transparent (Ghost button)
         Cancel.Text = "Cancel"
         Cancel.Font = Enum.Font.GothamBold
         Cancel.TextSize = 15
-        Cancel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        Cancel.TextTransparency = 0.3
+        Cancel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        Cancel.TextTransparency = 0
         Cancel.ZIndex = 52
         Cancel.Name = "Cancel"
         Cancel.Parent = Dialog
         Instance.new("UICorner", Cancel).CornerRadius = UDim.new(0, 6)
         
-        -- Add gradient to Cancel button
-        local CancelGradient = Instance.new("UIGradient")
-        CancelGradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
-        })
-        CancelGradient.Rotation = 45
-        CancelGradient.Parent = Cancel
+        -- Add Border to Cancel button
+        local CancelStroke = Instance.new("UIStroke")
+        CancelStroke.Color = Color3.fromRGB(138, 43, 226) -- Purple border
+        CancelStroke.Thickness = 1.5
+        CancelStroke.Transparency = 0.3
+        CancelStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        CancelStroke.Parent = Cancel
 
         Yes.MouseButton1Click:Connect(function()
             if Vyper then Vyper:Destroy() end

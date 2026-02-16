@@ -1095,8 +1095,8 @@ function Vyper:Window(GuiConfig)
     UIStroke14.Parent = DropdownSelect
 
     DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
-    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(25, 20, 40) -- Lighter dark purple
-    DropdownSelectReal.BackgroundTransparency = 0.15 -- More visible but still transparent
+    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White for gradient
+    DropdownSelectReal.BackgroundTransparency = 0.85 -- Very transparent for modern look
     DropdownSelectReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelectReal.BorderSizePixel = 0
     DropdownSelectReal.LayoutOrder = 1
@@ -1105,13 +1105,17 @@ function Vyper:Window(GuiConfig)
     DropdownSelectReal.Name = "DropdownSelectReal"
     DropdownSelectReal.Parent = DropdownSelect
     
-    -- Add gradient
+    -- Add gradient with more opacity
     local DropRealGradient = Instance.new("UIGradient")
     DropRealGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
     })
     DropRealGradient.Rotation = 90
+    DropRealGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0.3),  -- Less transparent at top
+        NumberSequenceKeypoint.new(1, 0.3)   -- Less transparent at bottom
+    })
     DropRealGradient.Parent = DropdownSelectReal
 
     DropdownFolder.Name = "DropdownFolder"

@@ -1059,7 +1059,8 @@ function Vyper:Window(GuiConfig)
     local DropPageLayout = Instance.new("UIPageLayout");
 
     DropdownSelect.AnchorPoint = Vector2.new(1, 0.5)
-    DropdownSelect.BackgroundColor3 = Color3.fromRGB(40, 25, 60)
+    DropdownSelect.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Match Main window base
+    DropdownSelect.BackgroundTransparency = 0.15 -- Match transparency
     DropdownSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelect.BorderSizePixel = 0
     DropdownSelect.LayoutOrder = 1
@@ -1095,8 +1096,8 @@ function Vyper:Window(GuiConfig)
     UIStroke14.Parent = DropdownSelect
 
     DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
-    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Same as main window
-    DropdownSelectReal.BackgroundTransparency = 0.1 -- Same as main window
+    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White base to make gradient vibrant!
+    DropdownSelectReal.BackgroundTransparency = 0.3 -- Match Main window overlay transparency
     DropdownSelectReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelectReal.BorderSizePixel = 0
     DropdownSelectReal.LayoutOrder = 1
@@ -1105,7 +1106,7 @@ function Vyper:Window(GuiConfig)
     DropdownSelectReal.Name = "DropdownSelectReal"
     DropdownSelectReal.Parent = DropdownSelect
     
-    -- Add same gradient overlay as main window
+    -- Add same gradient overlay style as main window
     local DropRealGradient = Instance.new("UIGradient")
     DropRealGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0.0, Color3.fromRGB(80, 40, 120)),   -- Dark purple
@@ -1114,7 +1115,6 @@ function Vyper:Window(GuiConfig)
         ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 240, 255))  -- Bright cyan
     })
     DropRealGradient.Rotation = 135 -- Same diagonal as main window
-    DropRealGradient.Transparency = NumberSequence.new(0.3) -- Slightly more visible than main window
     DropRealGradient.Parent = DropdownSelectReal
 
     DropdownFolder.Name = "DropdownFolder"

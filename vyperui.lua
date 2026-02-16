@@ -1290,8 +1290,8 @@ function Vyper:Window(GuiConfig)
             local SectionTitle = Instance.new("TextLabel");
 
             SectionReal.AnchorPoint = Vector2.new(0.5, 0)
-            SectionReal.BackgroundColor3 = Color3.fromRGB(40, 25, 60) -- Purple base
-            SectionReal.BackgroundTransparency = 0.4
+            SectionReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White for gradient
+            SectionReal.BackgroundTransparency = 0.92
             SectionReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
             SectionReal.BorderSizePixel = 0
             SectionReal.LayoutOrder = 1
@@ -1512,8 +1512,8 @@ function Vyper:Window(GuiConfig)
                 local ParagraphTitle = Instance.new("TextLabel")
                 local ParagraphContent = Instance.new("TextLabel")
 
-                Paragraph.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
-                Paragraph.BackgroundTransparency = 0.5
+                Paragraph.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Paragraph.BackgroundTransparency = 0.92
                 Paragraph.BorderSizePixel = 0
                 Paragraph.LayoutOrder = CountItem
                 Paragraph.Size = UDim2.new(1, 0, 0, 46)
@@ -1654,8 +1654,8 @@ function Vyper:Window(GuiConfig)
                 end
 
                 local Panel = Instance.new("Frame")
-                Panel.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
-                Panel.BackgroundTransparency = 0.5
+                Panel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Panel.BackgroundTransparency = 0.92
                 Panel.Size = UDim2.new(1, 0, 0, baseHeight)
                 Panel.LayoutOrder = CountItem
                 Panel.Parent = SectionAdd
@@ -1798,8 +1798,8 @@ function Vyper:Window(GuiConfig)
                 ButtonConfig.SubCallback = ButtonConfig.SubCallback or function() end
 
                 local Button = Instance.new("Frame")
-                Button.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
-                Button.BackgroundTransparency = 0.5
+                Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Button.BackgroundTransparency = 0.92
                 Button.Size = UDim2.new(1, 0, 0, 40)
                 Button.LayoutOrder = CountItem
                 Button.Parent = SectionAdd
@@ -1884,8 +1884,8 @@ function Vyper:Window(GuiConfig)
                 local ToggleCircle = Instance.new("Frame")
                 local UICorner23 = Instance.new("UICorner")
 
-                Toggle.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
-                Toggle.BackgroundTransparency = 0.5
+                Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Toggle.BackgroundTransparency = 0.92
                 Toggle.BorderSizePixel = 0
                 Toggle.LayoutOrder = CountItem
                 Toggle.Name = "Toggle"
@@ -2076,8 +2076,8 @@ function Vyper:Window(GuiConfig)
                 local UIStroke6 = Instance.new("UIStroke");
                 local UIStroke7 = Instance.new("UIStroke");
 
-                Slider.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
-                Slider.BackgroundTransparency = 0.5
+                Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Slider.BackgroundTransparency = 0.92
                 Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Slider.BorderSizePixel = 0
                 Slider.LayoutOrder = CountItem
@@ -2305,8 +2305,8 @@ function Vyper:Window(GuiConfig)
                 local UICorner13 = Instance.new("UICorner");
                 local InputTextBox = Instance.new("TextBox");
 
-                Input.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
-                Input.BackgroundTransparency = 0.5
+                Input.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Input.BackgroundTransparency = 0.92
                 Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Input.BorderSizePixel = 0
                 Input.LayoutOrder = CountItem
@@ -2449,8 +2449,8 @@ function Vyper:Window(GuiConfig)
                 local OptionSelecting = Instance.new("TextLabel")
                 local OptionImg = Instance.new("ImageLabel")
 
-                Dropdown.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
-                Dropdown.BackgroundTransparency = 0.5
+                Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Dropdown.BackgroundTransparency = 0.92
                 Dropdown.BorderSizePixel = 0
                 Dropdown.LayoutOrder = CountItem
                 Dropdown.Size = UDim2.new(1, 0, 0, 46)

@@ -1095,8 +1095,8 @@ function Vyper:Window(GuiConfig)
     UIStroke14.Parent = DropdownSelect
 
     DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
-    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(40, 25, 60)
-    DropdownSelectReal.BackgroundTransparency = 0.3
+    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(25, 20, 40) -- Lighter dark purple
+    DropdownSelectReal.BackgroundTransparency = 0.15 -- More visible but still transparent
     DropdownSelectReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelectReal.BorderSizePixel = 0
     DropdownSelectReal.LayoutOrder = 1

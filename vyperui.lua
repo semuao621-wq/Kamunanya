@@ -794,16 +794,26 @@ function Vyper:Window(GuiConfig)
         Overlay.ZIndex = 50
         Overlay.Parent = DropShadowHolder
 
-        local Dialog = Instance.new("ImageLabel")
+        local Dialog = Instance.new("Frame") -- Changed to Frame for gradient
         Dialog.Size = UDim2.new(0, 300, 0, 150)
         Dialog.Position = UDim2.new(0.5, -150, 0.5, -75)
-        Dialog.Image = "rbxassetid://9542022979"
-        Dialog.ImageTransparency = 0
+        Dialog.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Dark purple base
+        Dialog.BackgroundTransparency = 0.1
         Dialog.BorderSizePixel = 0
         Dialog.ZIndex = 51
         Dialog.Parent = Overlay
         local UICorner = Instance.new("UICorner", Dialog)
         UICorner.CornerRadius = UDim.new(0, 8)
+        
+        -- Add purple-cyan gradient to dialog
+        local DialogMainGradient = Instance.new("UIGradient")
+        DialogMainGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(80, 40, 120)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(138, 43, 226)),
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(100, 180, 255))
+        })
+        DialogMainGradient.Rotation = 135
+        DialogMainGradient.Parent = Dialog
 
         local DialogGlow = Instance.new("Frame")
         DialogGlow.Size = UDim2.new(0, 310, 0, 160)
@@ -819,11 +829,9 @@ function Vyper:Window(GuiConfig)
 
         local Gradient = Instance.new("UIGradient")
         Gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(138, 43, 226)),    -- Merah
-            ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 255, 255)), -- Putih
-            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 30, 30)),    -- Merah gelap
-            ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 255, 255)), -- Putih
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(138, 43, 226))     -- Merah
+            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(138, 43, 226)),   -- Purple
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150, 240, 255)),  -- Bright cyan
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(138, 43, 226))    -- Purple
         })
         Gradient.Rotation = 90
         Gradient.Parent = DialogGlow
@@ -855,7 +863,7 @@ function Vyper:Window(GuiConfig)
         Yes.Size = UDim2.new(0.45, -10, 0, 35)
         Yes.Position = UDim2.new(0.05, 0, 1, -55)
         Yes.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Yes.BackgroundTransparency = 0.935
+        Yes.BackgroundTransparency = 0.92
         Yes.Text = "Yes"
         Yes.Font = Enum.Font.GothamBold
         Yes.TextSize = 15
@@ -865,12 +873,21 @@ function Vyper:Window(GuiConfig)
         Yes.Name = "Yes"
         Yes.Parent = Dialog
         Instance.new("UICorner", Yes).CornerRadius = UDim.new(0, 6)
+        
+        -- Add gradient to Yes button
+        local YesGradient = Instance.new("UIGradient")
+        YesGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+        })
+        YesGradient.Rotation = 45
+        YesGradient.Parent = Yes
 
         local Cancel = Instance.new("TextButton")
         Cancel.Size = UDim2.new(0.45, -10, 0, 35)
         Cancel.Position = UDim2.new(0.5, 10, 1, -55)
         Cancel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Cancel.BackgroundTransparency = 0.935
+        Cancel.BackgroundTransparency = 0.92
         Cancel.Text = "Cancel"
         Cancel.Font = Enum.Font.GothamBold
         Cancel.TextSize = 15
@@ -880,6 +897,15 @@ function Vyper:Window(GuiConfig)
         Cancel.Name = "Cancel"
         Cancel.Parent = Dialog
         Instance.new("UICorner", Cancel).CornerRadius = UDim.new(0, 6)
+        
+        -- Add gradient to Cancel button
+        local CancelGradient = Instance.new("UIGradient")
+        CancelGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+        })
+        CancelGradient.Rotation = 45
+        CancelGradient.Parent = Cancel
 
         Yes.MouseButton1Click:Connect(function()
             if Vyper then Vyper:Destroy() end

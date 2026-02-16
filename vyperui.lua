@@ -794,38 +794,26 @@ function Vyper:Window(GuiConfig)
         Overlay.ZIndex = 50
         Overlay.Parent = DropShadowHolder
 
-        local Dialog = Instance.new("Frame")
+        local Dialog = Instance.new("Frame") -- Changed to Frame for gradient
         Dialog.Size = UDim2.new(0, 300, 0, 150)
         Dialog.Position = UDim2.new(0.5, -150, 0.5, -75)
         Dialog.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Dark purple base
-        Dialog.BackgroundTransparency = 0.15 -- Match Main Window Transparency
+        Dialog.BackgroundTransparency = 0.1
         Dialog.BorderSizePixel = 0
         Dialog.ZIndex = 51
         Dialog.Parent = Overlay
         local UICorner = Instance.new("UICorner", Dialog)
         UICorner.CornerRadius = UDim.new(0, 8)
         
-        -- Add Overlay for Vibrant Gradient (Match Main Window Style)
-        local DialogOverlay = Instance.new("Frame")
-        DialogOverlay.Size = UDim2.new(1, 0, 1, 0)
-        DialogOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White base for gradient
-        DialogOverlay.BackgroundTransparency = 0.3 -- Match Main Window Overlay Transparency
-        DialogOverlay.BorderSizePixel = 0
-        DialogOverlay.ZIndex = 51 -- Same ZIndex as container, but rendered on top of background
-        DialogOverlay.Name = "DialogOverlay"
-        DialogOverlay.Parent = Dialog
-        
-        local OverlayCorner = Instance.new("UICorner", DialogOverlay)
-        OverlayCorner.CornerRadius = UDim.new(0, 8)
-
+        -- Add purple-cyan gradient to dialog
         local DialogMainGradient = Instance.new("UIGradient")
         DialogMainGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0.0, Color3.fromRGB(80, 40, 120)),
             ColorSequenceKeypoint.new(0.5, Color3.fromRGB(138, 43, 226)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 240, 255))
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(100, 180, 255))
         })
         DialogMainGradient.Rotation = 135
-        DialogMainGradient.Parent = DialogOverlay
+        DialogMainGradient.Parent = Dialog
 
         local DialogGlow = Instance.new("Frame")
         DialogGlow.Size = UDim2.new(0, 310, 0, 160)

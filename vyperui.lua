@@ -322,8 +322,8 @@ function Vyper:MakeNotify(NotifyConfig)
         local ImageLabel = Instance.new("ImageLabel");
         local TextLabel2 = Instance.new("TextLabel");
 
-        NotifyFrame.BackgroundColor3 = Color3.fromRGB(45, 20, 70)
-        NotifyFrame.BorderColor3 = Color3.fromRGB(45, 20, 70)
+        NotifyFrame.BackgroundColor3 = Color3.fromRGB(29, 30, 35)
+        NotifyFrame.BorderColor3 = Color3.fromRGB(29, 30, 35)
         NotifyFrame.BorderSizePixel = 0
         NotifyFrame.Size = UDim2.new(1, 0, 0, 150)
         NotifyFrame.Name = "NotifyFrame"
@@ -332,7 +332,7 @@ function Vyper:MakeNotify(NotifyConfig)
         NotifyFrame.AnchorPoint = Vector2.new(0, 1)
         NotifyFrame.Position = UDim2.new(0, 0, 1, -(NotifyPosHeigh))
 
-        NotifyFrameReal.BackgroundColor3 = Color3.fromRGB(45, 20, 70)
+        NotifyFrameReal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         NotifyFrameReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
         NotifyFrameReal.BorderSizePixel = 0
         NotifyFrameReal.Position = UDim2.new(0, 400, 0, 0)
@@ -551,8 +551,32 @@ function Vyper:Window(GuiConfig)
         Main.BackgroundTransparency = 1
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
-        Main.BackgroundColor3 = Color3.fromRGB(45, 20, 70) -- Latar Warna Window (Purple)
-        Main.BackgroundTransparency = 0.1
+        Main.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Dark base for gradient
+        Main.BackgroundTransparency = 0.15
+        
+        -- Add purple-cyan gradient overlay for 3D modern look
+        local GradientOverlay = Instance.new("Frame")
+        GradientOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        GradientOverlay.BackgroundTransparency = 0.3
+        GradientOverlay.BorderSizePixel = 0
+        GradientOverlay.Size = UDim2.new(1, 0, 1, 0)
+        GradientOverlay.ZIndex = 1
+        GradientOverlay.Name = "GradientOverlay"
+        
+        local MainGradient = Instance.new("UIGradient")
+        MainGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(80, 40, 120)),   -- Dark purple
+            ColorSequenceKeypoint.new(0.3, Color3.fromRGB(138, 43, 226)),  -- Purple
+            ColorSequenceKeypoint.new(0.7, Color3.fromRGB(100, 150, 255)), -- Cyan-blue
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 240, 255))  -- Bright cyan
+        })
+        MainGradient.Rotation = 135 -- Diagonal gradient like logo
+        MainGradient.Parent = GradientOverlay
+        
+        local GradientCorner = Instance.new("UICorner")
+        GradientCorner.Parent = GradientOverlay
+        
+        GradientOverlay.Parent = Main
     end
 
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -795,11 +819,11 @@ function Vyper:Window(GuiConfig)
 
         local Gradient = Instance.new("UIGradient")
         Gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(138, 43, 226)),
-            ColorSequenceKeypoint.new(0.25, Color3.fromRGB(160, 80, 240)),
-            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(138, 43, 226)),
-            ColorSequenceKeypoint.new(0.75, Color3.fromRGB(160, 80, 240)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(138, 43, 226))
+            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(138, 43, 226)),    -- Merah
+            ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 255, 255)), -- Putih
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 30, 30)),    -- Merah gelap
+            ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 255, 255)), -- Putih
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(138, 43, 226))     -- Merah
         })
         Gradient.Rotation = 90
         Gradient.Parent = DialogGlow
@@ -1009,7 +1033,7 @@ function Vyper:Window(GuiConfig)
     local DropPageLayout = Instance.new("UIPageLayout");
 
     DropdownSelect.AnchorPoint = Vector2.new(1, 0.5)
-    DropdownSelect.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
+    DropdownSelect.BackgroundColor3 = Color3.fromRGB(40, 25, 60)
     DropdownSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelect.BorderSizePixel = 0
     DropdownSelect.LayoutOrder = 1
@@ -1018,6 +1042,15 @@ function Vyper:Window(GuiConfig)
     DropdownSelect.Name = "DropdownSelect"
     DropdownSelect.ClipsDescendants = true
     DropdownSelect.Parent = MoreBlur
+    
+    -- Add gradient to dropdown select
+    local DropSelectGradient = Instance.new("UIGradient")
+    DropSelectGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+    })
+    DropSelectGradient.Rotation = 90
+    DropSelectGradient.Parent = DropdownSelect
 
     ConnectButton.Activated:Connect(function()
         if MoreBlur.Visible then
@@ -1036,8 +1069,8 @@ function Vyper:Window(GuiConfig)
     UIStroke14.Parent = DropdownSelect
 
     DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
-    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(60, 30, 90) -- Latar Warna Dropdown (Purple)
-    DropdownSelectReal.BackgroundTransparency = 0.5
+    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(40, 25, 60)
+    DropdownSelectReal.BackgroundTransparency = 0.3
     DropdownSelectReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelectReal.BorderSizePixel = 0
     DropdownSelectReal.LayoutOrder = 1
@@ -1045,6 +1078,15 @@ function Vyper:Window(GuiConfig)
     DropdownSelectReal.Size = UDim2.new(1, 1, 1, 1)
     DropdownSelectReal.Name = "DropdownSelectReal"
     DropdownSelectReal.Parent = DropdownSelect
+    
+    -- Add gradient
+    local DropRealGradient = Instance.new("UIGradient")
+    DropRealGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+    })
+    DropRealGradient.Rotation = 90
+    DropRealGradient.Parent = DropdownSelectReal
 
     DropdownFolder.Name = "DropdownFolder"
     DropdownFolder.Parent = DropdownSelectReal
@@ -1248,8 +1290,8 @@ function Vyper:Window(GuiConfig)
             local SectionTitle = Instance.new("TextLabel");
 
             SectionReal.AnchorPoint = Vector2.new(0.5, 0)
-            SectionReal.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-            SectionReal.BackgroundTransparency = 0.7
+            SectionReal.BackgroundColor3 = Color3.fromRGB(40, 25, 60) -- Purple base
+            SectionReal.BackgroundTransparency = 0.4
             SectionReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
             SectionReal.BorderSizePixel = 0
             SectionReal.LayoutOrder = 1
@@ -1257,6 +1299,23 @@ function Vyper:Window(GuiConfig)
             SectionReal.Size = UDim2.new(1, 1, 0, 30)
             SectionReal.Name = "SectionReal"
             SectionReal.Parent = Section
+            
+            -- Add gradient for 3D effect
+            local SectionGradient = Instance.new("UIGradient")
+            SectionGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0.0, Color3.fromRGB(100, 50, 150)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(138, 43, 226)),
+                ColorSequenceKeypoint.new(1.0, Color3.fromRGB(100, 180, 255))
+            })
+            SectionGradient.Rotation = 90
+            SectionGradient.Parent = SectionReal
+            
+            -- Add glow stroke for 3D depth
+            local SectionGlow = Instance.new("UIStroke")
+            SectionGlow.Color = Color3.fromRGB(150, 100, 255)
+            SectionGlow.Thickness = 1
+            SectionGlow.Transparency = 0.7
+            SectionGlow.Parent = SectionReal
 
             UICorner.CornerRadius = UDim.new(0, 4)
             UICorner.Parent = SectionReal
@@ -1323,9 +1382,9 @@ function Vyper:Window(GuiConfig)
             UICorner1.Parent = SectionDecideFrame
 
             UIGradient.Color = ColorSequence.new {
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 20, 70)),
-                ColorSequenceKeypoint.new(0.5, GuiConfig.Color),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(45, 20, 70))
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),   -- Purple
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150, 240, 255)), -- Bright cyan
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(138, 43, 226))    -- Purple
             }
             UIGradient.Parent = SectionDecideFrame
 
@@ -1453,13 +1512,22 @@ function Vyper:Window(GuiConfig)
                 local ParagraphTitle = Instance.new("TextLabel")
                 local ParagraphContent = Instance.new("TextLabel")
 
-                Paragraph.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                Paragraph.BackgroundTransparency = 0.7
+                Paragraph.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+                Paragraph.BackgroundTransparency = 0.5
                 Paragraph.BorderSizePixel = 0
                 Paragraph.LayoutOrder = CountItem
                 Paragraph.Size = UDim2.new(1, 0, 0, 46)
                 Paragraph.Name = "Paragraph"
                 Paragraph.Parent = SectionAdd
+                
+                -- Add gradient
+                local ParagraphGradient = Instance.new("UIGradient")
+                ParagraphGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                ParagraphGradient.Rotation = 45
+                ParagraphGradient.Parent = Paragraph
 
                 UICorner14.CornerRadius = UDim.new(0, 4)
                 UICorner14.Parent = Paragraph
@@ -1514,8 +1582,8 @@ function Vyper:Window(GuiConfig)
                     ParagraphButton = Instance.new("TextButton")
                     ParagraphButton.Position = UDim2.new(0, 10, 0, 42)
                     ParagraphButton.Size = UDim2.new(1, -22, 0, 28)
-                    ParagraphButton.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                    ParagraphButton.BackgroundTransparency = 0.7
+                    ParagraphButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    ParagraphButton.BackgroundTransparency = 0.935
                     ParagraphButton.Font = Enum.Font.GothamBold
                     ParagraphButton.TextSize = 12
                     ParagraphButton.TextTransparency = 0.3
@@ -1586,11 +1654,20 @@ function Vyper:Window(GuiConfig)
                 end
 
                 local Panel = Instance.new("Frame")
-                Panel.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                Panel.BackgroundTransparency = 0.7
+                Panel.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+                Panel.BackgroundTransparency = 0.5
                 Panel.Size = UDim2.new(1, 0, 0, baseHeight)
                 Panel.LayoutOrder = CountItem
                 Panel.Parent = SectionAdd
+                
+                -- Add gradient
+                local PanelGradient = Instance.new("UIGradient")
+                PanelGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                PanelGradient.Rotation = 45
+                PanelGradient.Parent = Panel
 
                 local UICorner = Instance.new("UICorner")
                 UICorner.CornerRadius = UDim.new(0, 4)
@@ -1624,8 +1701,8 @@ function Vyper:Window(GuiConfig)
                 if PanelConfig.Placeholder then
                     local InputFrame = Instance.new("Frame")
                     InputFrame.AnchorPoint = Vector2.new(0.5, 0)
-                    InputFrame.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
-                    InputFrame.BackgroundTransparency = 0.6
+                    InputFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    InputFrame.BackgroundTransparency = 0.95
                     InputFrame.Position = UDim2.new(0.5, 0, 0, 48)
                     InputFrame.Size = UDim2.new(1, -20, 0, 30)
                     InputFrame.Parent = Panel
@@ -1661,8 +1738,8 @@ function Vyper:Window(GuiConfig)
                 ButtonMain.TextColor3 = Color3.fromRGB(255, 255, 255)
                 ButtonMain.TextSize = 12
                 ButtonMain.TextTransparency = 0.3
-                ButtonMain.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                ButtonMain.BackgroundTransparency = 0.7
+                ButtonMain.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                ButtonMain.BackgroundTransparency = 0.935
                 ButtonMain.Size = PanelConfig.SubButtonText and UDim2.new(0.5, -12, 0, 30) or UDim2.new(1, -20, 0, 30)
                 ButtonMain.Position = UDim2.new(0, 10, 0, yBtn)
                 ButtonMain.Parent = Panel
@@ -1682,8 +1759,8 @@ function Vyper:Window(GuiConfig)
                     SubButton.TextColor3 = Color3.fromRGB(255, 255, 255)
                     SubButton.TextSize = 12
                     SubButton.TextTransparency = 0.3
-                    SubButton.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                    SubButton.BackgroundTransparency = 0.7
+                    SubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    SubButton.BackgroundTransparency = 0.935
                     SubButton.Size = UDim2.new(0.5, -12, 0, 30)
                     SubButton.Position = UDim2.new(0.5, 2, 0, yBtn)
                     SubButton.Parent = Panel
@@ -1721,11 +1798,20 @@ function Vyper:Window(GuiConfig)
                 ButtonConfig.SubCallback = ButtonConfig.SubCallback or function() end
 
                 local Button = Instance.new("Frame")
-                Button.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                Button.BackgroundTransparency = 0.7
+                Button.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+                Button.BackgroundTransparency = 0.5
                 Button.Size = UDim2.new(1, 0, 0, 40)
                 Button.LayoutOrder = CountItem
                 Button.Parent = SectionAdd
+                
+                -- Add gradient
+                local ButtonGradient = Instance.new("UIGradient")
+                ButtonGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                ButtonGradient.Rotation = 45
+                ButtonGradient.Parent = Button
 
                 local UICorner = Instance.new("UICorner")
                 UICorner.CornerRadius = UDim.new(0, 4)
@@ -1737,8 +1823,8 @@ function Vyper:Window(GuiConfig)
                 MainButton.TextSize = 12
                 MainButton.TextColor3 = Color3.fromRGB(255, 255, 255)
                 MainButton.TextTransparency = 0.3
-                MainButton.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
-                MainButton.BackgroundTransparency = 0.6
+                MainButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                MainButton.BackgroundTransparency = 0.935
                 MainButton.Size = ButtonConfig.SubTitle and UDim2.new(0.5, -8, 1, -10) or UDim2.new(1, -12, 1, -10)
                 MainButton.Position = UDim2.new(0, 6, 0, 5)
                 MainButton.Parent = Button
@@ -1756,8 +1842,8 @@ function Vyper:Window(GuiConfig)
                     SubButton.TextSize = 12
                     SubButton.TextTransparency = 0.3
                     SubButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-                    SubButton.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
-                    SubButton.BackgroundTransparency = 0.6
+                    SubButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    SubButton.BackgroundTransparency = 0.935
                     SubButton.Size = UDim2.new(0.5, -8, 1, -10)
                     SubButton.Position = UDim2.new(0.5, 2, 0, 5)
                     SubButton.Parent = Button
@@ -1798,12 +1884,21 @@ function Vyper:Window(GuiConfig)
                 local ToggleCircle = Instance.new("Frame")
                 local UICorner23 = Instance.new("UICorner")
 
-                Toggle.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                Toggle.BackgroundTransparency = 0.7
+                Toggle.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+                Toggle.BackgroundTransparency = 0.5
                 Toggle.BorderSizePixel = 0
                 Toggle.LayoutOrder = CountItem
                 Toggle.Name = "Toggle"
                 Toggle.Parent = SectionAdd
+                
+                -- Add gradient
+                local ToggleGradient = Instance.new("UIGradient")
+                ToggleGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                ToggleGradient.Rotation = 45
+                ToggleGradient.Parent = Toggle
 
                 UICorner20.CornerRadius = UDim.new(0, 4)
                 UICorner20.Parent = Toggle
@@ -1981,14 +2076,23 @@ function Vyper:Window(GuiConfig)
                 local UIStroke6 = Instance.new("UIStroke");
                 local UIStroke7 = Instance.new("UIStroke");
 
-                Slider.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                Slider.BackgroundTransparency = 0.7
+                Slider.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+                Slider.BackgroundTransparency = 0.5
                 Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Slider.BorderSizePixel = 0
                 Slider.LayoutOrder = CountItem
                 Slider.Size = UDim2.new(1, 0, 0, 46)
                 Slider.Name = "Slider"
                 Slider.Parent = SectionAdd
+                
+                -- Add gradient
+                local SliderGradient = Instance.new("UIGradient")
+                SliderGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                SliderGradient.Rotation = 45
+                SliderGradient.Parent = Slider
 
                 UICorner15.CornerRadius = UDim.new(0, 4)
                 UICorner15.Parent = Slider
@@ -2201,14 +2305,23 @@ function Vyper:Window(GuiConfig)
                 local UICorner13 = Instance.new("UICorner");
                 local InputTextBox = Instance.new("TextBox");
 
-                Input.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                Input.BackgroundTransparency = 0.7
+                Input.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+                Input.BackgroundTransparency = 0.5
                 Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Input.BorderSizePixel = 0
                 Input.LayoutOrder = CountItem
                 Input.Size = UDim2.new(1, 0, 0, 46)
                 Input.Name = "Input"
                 Input.Parent = SectionAdd
+                
+                -- Add gradient
+                local InputGradient = Instance.new("UIGradient")
+                InputGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                InputGradient.Rotation = 45
+                InputGradient.Parent = Input
 
                 UICorner12.CornerRadius = UDim.new(0, 4)
                 UICorner12.Parent = Input
@@ -2260,8 +2373,8 @@ function Vyper:Window(GuiConfig)
                 end)
 
                 InputFrame.AnchorPoint = Vector2.new(1, 0.5)
-                InputFrame.BackgroundColor3 = Color3.fromRGB(60, 30, 90)
-                InputFrame.BackgroundTransparency = 0.6
+                InputFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                InputFrame.BackgroundTransparency = 0.949999988079071
                 InputFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 InputFrame.BorderSizePixel = 0
                 InputFrame.ClipsDescendants = true
@@ -2336,13 +2449,22 @@ function Vyper:Window(GuiConfig)
                 local OptionSelecting = Instance.new("TextLabel")
                 local OptionImg = Instance.new("ImageLabel")
 
-                Dropdown.BackgroundColor3 = Color3.fromRGB(75, 40, 110)
-                Dropdown.BackgroundTransparency = 0.7
+                Dropdown.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
+                Dropdown.BackgroundTransparency = 0.5
                 Dropdown.BorderSizePixel = 0
                 Dropdown.LayoutOrder = CountItem
                 Dropdown.Size = UDim2.new(1, 0, 0, 46)
                 Dropdown.Name = "Dropdown"
                 Dropdown.Parent = SectionAdd
+                
+                -- Add gradient
+                local DropdownGradient = Instance.new("UIGradient")
+                DropdownGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                DropdownGradient.Rotation = 45
+                DropdownGradient.Parent = Dropdown
 
                 DropdownButton.Text = ""
                 DropdownButton.BackgroundTransparency = 1

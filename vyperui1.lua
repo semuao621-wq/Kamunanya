@@ -551,98 +551,9 @@ function Vyper:Window(GuiConfig)
         Main.BackgroundTransparency = 1
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
-        -- iPhone LiquidGlass Effect - Hitam Putih
-        Main.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Dark base
-        Main.BackgroundTransparency = 0.3 -- Glass transparency
-        
-        -- LiquidGlass Layer 1 - White glass overlay
-        local GlassLayer1 = Instance.new("Frame")
-        GlassLayer1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        GlassLayer1.BackgroundTransparency = 0.7 -- Glass effect
-        GlassLayer1.BorderSizePixel = 0
-        GlassLayer1.Size = UDim2.new(1, 0, 1, 0)
-        GlassLayer1.ZIndex = 1
-        GlassLayer1.Name = "GlassLayer1"
-        
-        local GlassGradient1 = Instance.new("UIGradient")
-        GlassGradient1.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(240, 240, 240)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(220, 220, 220))
-        })
-        GlassGradient1.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0.0, 0.7),
-            NumberSequenceKeypoint.new(0.5, 0.75),
-            NumberSequenceKeypoint.new(1.0, 0.8)
-        })
-        GlassGradient1.Rotation = 135
-        GlassGradient1.Parent = GlassLayer1
-        
-        local GlassCorner1 = Instance.new("UICorner")
-        GlassCorner1.Parent = GlassLayer1
-        GlassLayer1.Parent = Main
-        
-        -- LiquidGlass Layer 2 - Highlight untuk efek menonjol
-        local GlassLayer2 = Instance.new("Frame")
-        GlassLayer2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        GlassLayer2.BackgroundTransparency = 0.85
-        GlassLayer2.BorderSizePixel = 0
-        GlassLayer2.Size = UDim2.new(1, 0, 0.3, 0) -- Top highlight
-        GlassLayer2.Position = UDim2.new(0, 0, 0, 0)
-        GlassLayer2.ZIndex = 2
-        GlassLayer2.Name = "GlassLayer2"
-        
-        local GlassGradient2 = Instance.new("UIGradient")
-        GlassGradient2.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(200, 200, 200))
-        })
-        GlassGradient2.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0.0, 0.8),
-            NumberSequenceKeypoint.new(1.0, 1.0)
-        })
-        GlassGradient2.Rotation = 0
-        GlassGradient2.Parent = GlassLayer2
-        
-        local GlassCorner2 = Instance.new("UICorner")
-        GlassCorner2.CornerRadius = UDim.new(0, 16)
-        GlassCorner2.Parent = GlassLayer2
-        GlassLayer2.Parent = Main
-        
-        -- Border dengan efek 3D menonjol
-        local MainStroke = Instance.new("UIStroke")
-        MainStroke.Color = Color3.fromRGB(255, 255, 255)
-        MainStroke.Thickness = 2
-        MainStroke.Transparency = 0.6 -- Subtle white border
-        MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        MainStroke.Parent = Main
-        
-        -- Inner shadow untuk depth
-        local InnerShadow = Instance.new("Frame")
-        InnerShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        InnerShadow.BackgroundTransparency = 0.9
-        InnerShadow.BorderSizePixel = 0
-        InnerShadow.Size = UDim2.new(1, -4, 1, -4)
-        InnerShadow.Position = UDim2.new(0, 2, 0, 2)
-        InnerShadow.ZIndex = 3
-        InnerShadow.Name = "InnerShadow"
-        
-        local InnerShadowCorner = Instance.new("UICorner")
-        InnerShadowCorner.Parent = InnerShadow
-        
-        local InnerShadowGradient = Instance.new("UIGradient")
-        InnerShadowGradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(0, 0, 0)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(50, 50, 50))
-        })
-        InnerShadowGradient.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0.0, 0.9),
-            NumberSequenceKeypoint.new(1.0, 1.0)
-        })
-        InnerShadowGradient.Rotation = 45
-        InnerShadowGradient.Parent = InnerShadow
-        
-        InnerShadow.Parent = Main
+        -- Clean Modern Background
+        Main.BackgroundColor3 = Color3.fromRGB(245, 245, 245) -- Clean light gray
+        Main.BackgroundTransparency = 0.05
     end
 
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -653,35 +564,22 @@ function Vyper:Window(GuiConfig)
     Main.Name = "Main"
     Main.Parent = DropShadow
 
-    UICorner.CornerRadius = UDim.new(0, 16) -- iPhone style rounded corners
+    UICorner.CornerRadius = UDim.new(0, 12)
     UICorner.Parent = Main
 
-    -- iPhone LiquidGlass Top Bar - Hitam Putih
+    -- Clean Top Bar
     Top.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Top.BackgroundTransparency = 0.8 -- Glass effect
+    Top.BackgroundTransparency = 0
     Top.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Top.BorderSizePixel = 0
-    Top.Size = UDim2.new(1, 0, 0, 45) -- Taller untuk iPhone style
+    Top.Size = UDim2.new(1, 0, 0, 40)
     Top.Name = "Top"
     Top.Parent = Main
     
-    -- Glass gradient untuk top bar
-    local TopGradient = Instance.new("UIGradient")
-    TopGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(1.0, Color3.fromRGB(200, 200, 200))
-    })
-    TopGradient.Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0.0, 0.8),
-        NumberSequenceKeypoint.new(1.0, 0.85)
-    })
-    TopGradient.Rotation = 0
-    TopGradient.Parent = Top
-    
-    -- Bottom border untuk separation
+    -- Clean border separator
     local TopBorder = Instance.new("Frame")
-    TopBorder.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    TopBorder.BackgroundTransparency = 0.8
+    TopBorder.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+    TopBorder.BackgroundTransparency = 0
     TopBorder.BorderSizePixel = 0
     TopBorder.Size = UDim2.new(1, 0, 0, 1)
     TopBorder.Position = UDim2.new(0, 0, 1, -1)
@@ -689,61 +587,57 @@ function Vyper:Window(GuiConfig)
     TopBorder.Name = "TopBorder"
     TopBorder.Parent = Top
 
-    -- iPhone Style Title - Hitam Putih
+    -- Clean Title
     TextLabel.Font = Enum.Font.GothamBold
     TextLabel.Text = GuiConfig.Title
-    TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0) -- Hitam untuk kontras
-    TextLabel.TextSize = 16 -- iPhone style size
+    TextLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+    TextLabel.TextSize = 14
     TextLabel.TextXAlignment = Enum.TextXAlignment.Left
     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.BackgroundTransparency = 0.9990000128746033
+    TextLabel.BackgroundTransparency = 1
     TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel.BorderSizePixel = 0
     TextLabel.Size = UDim2.new(1, -100, 1, 0)
-    TextLabel.Position = UDim2.new(0, 15, 0, 0)
+    TextLabel.Position = UDim2.new(0, 12, 0, 0)
     TextLabel.Parent = Top
 
     UICorner1.Parent = Top
 
-    -- iPhone Style Footer - Hitam Putih
-    TextLabel1.Font = Enum.Font.GothamBold
+    -- Clean Footer
+    TextLabel1.Font = Enum.Font.Gotham
     TextLabel1.Text = GuiConfig.Footer
-    TextLabel1.TextColor3 = Color3.fromRGB(100, 100, 100) -- Gray untuk secondary text
-    TextLabel1.TextSize = 14
+    TextLabel1.TextColor3 = Color3.fromRGB(150, 150, 150)
+    TextLabel1.TextSize = 12
     TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
     TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel1.BackgroundTransparency = 0.9990000128746033
+    TextLabel1.BackgroundTransparency = 1
     TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel1.BorderSizePixel = 0
     TextLabel1.Size = UDim2.new(1, -(TextLabel.TextBounds.X + 104), 1, 0)
     TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 15, 0, 0)
     TextLabel1.Parent = Top
 
-    -- iPhone Style Close Button - LiquidGlass
+    -- Clean Close Button
     Close.Font = Enum.Font.SourceSans
     Close.Text = ""
     Close.TextColor3 = Color3.fromRGB(0, 0, 0)
     Close.TextSize = 14
     Close.AnchorPoint = Vector2.new(1, 0.5)
     Close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Close.BackgroundTransparency = 0.85 -- Glass effect
+    Close.BackgroundTransparency = 1
     Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Close.BorderSizePixel = 0
-    Close.Position = UDim2.new(1, -12, 0.5, 0)
-    Close.Size = UDim2.new(0, 30, 0, 30)
+    Close.Position = UDim2.new(1, -8, 0.5, 0)
+    Close.Size = UDim2.new(0, 28, 0, 28)
     Close.Name = "Close"
     Close.Parent = Top
     
-    local CloseCorner = Instance.new("UICorner")
-    CloseCorner.CornerRadius = UDim.new(0, 8)
-    CloseCorner.Parent = Close
-    
-    -- iPhone style hover effect
+    -- Simple hover effect
     Close.MouseEnter:Connect(function()
-        TweenService:Create(Close, TweenInfo.new(0.2), {BackgroundTransparency = 0.7}):Play()
+        TweenService:Create(Close, TweenInfo.new(0.15), {BackgroundTransparency = 0.9}):Play()
     end)
     Close.MouseLeave:Connect(function()
-        TweenService:Create(Close, TweenInfo.new(0.2), {BackgroundTransparency = 0.85}):Play()
+        TweenService:Create(Close, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
     end)
 
     ImageLabel1.Image = "rbxassetid://9886659671"
@@ -756,31 +650,27 @@ function Vyper:Window(GuiConfig)
     ImageLabel1.Size = UDim2.new(1, -8, 1, -8)
     ImageLabel1.Parent = Close
 
-    -- iPhone Style Minimize Button - LiquidGlass
+    -- Clean Minimize Button
     Min.Font = Enum.Font.SourceSans
     Min.Text = ""
     Min.TextColor3 = Color3.fromRGB(0, 0, 0)
     Min.TextSize = 14
     Min.AnchorPoint = Vector2.new(1, 0.5)
     Min.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Min.BackgroundTransparency = 0.85 -- Glass effect
+    Min.BackgroundTransparency = 1
     Min.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Min.BorderSizePixel = 0
-    Min.Position = UDim2.new(1, -46, 0.5, 0)
-    Min.Size = UDim2.new(0, 30, 0, 30)
+    Min.Position = UDim2.new(1, -40, 0.5, 0)
+    Min.Size = UDim2.new(0, 28, 0, 28)
     Min.Name = "Min"
     Min.Parent = Top
     
-    local MinCorner = Instance.new("UICorner")
-    MinCorner.CornerRadius = UDim.new(0, 8)
-    MinCorner.Parent = Min
-    
-    -- iPhone style hover effect
+    -- Simple hover effect
     Min.MouseEnter:Connect(function()
-        TweenService:Create(Min, TweenInfo.new(0.2), {BackgroundTransparency = 0.7}):Play()
+        TweenService:Create(Min, TweenInfo.new(0.15), {BackgroundTransparency = 0.9}):Play()
     end)
     Min.MouseLeave:Connect(function()
-        TweenService:Create(Min, TweenInfo.new(0.2), {BackgroundTransparency = 0.85}):Play()
+        TweenService:Create(Min, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
     end)
 
     ImageLabel2.Image = "rbxassetid://9886659276"
@@ -1304,41 +1194,21 @@ function Vyper:Window(GuiConfig)
         local UICorner4 = Instance.new("UICorner");
 
         -- iPhone LiquidGlass Tab - Hitam Putih
+        -- Clean Tab
         Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         if CountTab == 0 then
-            Tab.BackgroundTransparency = 0.75 -- Active tab lebih visible
+            Tab.BackgroundTransparency = 0
         else
-            Tab.BackgroundTransparency = 0.9 -- Inactive tab glass effect
+            Tab.BackgroundTransparency = 0.95
         end
         Tab.BorderColor3 = Color3.fromRGB(0, 0, 0)
         Tab.BorderSizePixel = 0
         Tab.LayoutOrder = CountTab
-        Tab.Size = UDim2.new(1, 0, 0, 36) -- Taller untuk iPhone style
+        Tab.Size = UDim2.new(1, 0, 0, 32)
         Tab.Name = "Tab"
         Tab.Parent = ScrollTab
-        
-        -- Glass gradient untuk tab
-        local TabGradient = Instance.new("UIGradient")
-        TabGradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(220, 220, 220))
-        })
-        TabGradient.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0.0, CountTab == 0 and 0.75 or 0.9),
-            NumberSequenceKeypoint.new(1.0, CountTab == 0 and 0.8 or 0.95)
-        })
-        TabGradient.Rotation = 0
-        TabGradient.Parent = Tab
-        
-        -- Border stroke untuk depth
-        local TabStroke = Instance.new("UIStroke")
-        TabStroke.Color = Color3.fromRGB(0, 0, 0)
-        TabStroke.Thickness = 1
-        TabStroke.Transparency = CountTab == 0 and 0.7 or 0.9
-        TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        TabStroke.Parent = Tab
 
-        UICorner3.CornerRadius = UDim.new(0, 8) -- iPhone style rounded
+        UICorner3.CornerRadius = UDim.new(0, 6)
         UICorner3.Parent = Tab
 
         TabButton.Font = Enum.Font.GothamBold
@@ -1354,18 +1224,18 @@ function Vyper:Window(GuiConfig)
         TabButton.Name = "TabButton"
         TabButton.Parent = Tab
 
-        -- iPhone Style Tab Name - Hitam Putih
+        -- Clean Tab Name
         TabName.Font = Enum.Font.GothamBold
         TabName.Text = "| " .. tostring(TabConfig.Name)
-        TabName.TextColor3 = CountTab == 0 and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(100, 100, 100)
-        TabName.TextSize = 14
+        TabName.TextColor3 = CountTab == 0 and Color3.fromRGB(30, 30, 30) or Color3.fromRGB(150, 150, 150)
+        TabName.TextSize = 13
         TabName.TextXAlignment = Enum.TextXAlignment.Left
         TabName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        TabName.BackgroundTransparency = 0.9990000128746033
+        TabName.BackgroundTransparency = 1
         TabName.BorderColor3 = Color3.fromRGB(0, 0, 0)
         TabName.BorderSizePixel = 0
         TabName.Size = UDim2.new(1, 0, 1, 0)
-        TabName.Position = UDim2.new(0, 32, 0, 0)
+        TabName.Position = UDim2.new(0, 30, 0, 0)
         TabName.Name = "TabName"
         TabName.Parent = Tab
 
@@ -1381,21 +1251,16 @@ function Vyper:Window(GuiConfig)
             LayersPageLayout:JumpToIndex(0)
             NameTab.Text = TabConfig.Name
             local ChooseFrame = Instance.new("Frame");
-            -- iPhone Style Active Indicator - Hitam
-            ChooseFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            -- Clean Active Indicator
+            ChooseFrame.BackgroundColor3 = GuiConfig.Color
             ChooseFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
             ChooseFrame.BorderSizePixel = 0
             ChooseFrame.Position = UDim2.new(0, 2, 0, 8)
-            ChooseFrame.Size = UDim2.new(0, 3, 0, 20) -- Wider untuk efek menonjol
+            ChooseFrame.Size = UDim2.new(0, 2, 0, 16)
             ChooseFrame.Name = "ChooseFrame"
             ChooseFrame.Parent = Tab
 
-            UIStroke2.Color = Color3.fromRGB(0, 0, 0)
-            UIStroke2.Thickness = 2
-            UIStroke2.Transparency = 0.3
-            UIStroke2.Parent = ChooseFrame
-
-            UICorner4.CornerRadius = UDim.new(0, 2)
+            UICorner4.CornerRadius = UDim.new(0, 1)
             UICorner4.Parent = ChooseFrame
         end
 
@@ -1421,49 +1286,23 @@ function Vyper:Window(GuiConfig)
             if FrameChoose ~= nil and Tab.LayoutOrder ~= LayersPageLayout.CurrentPage.LayoutOrder then
                 for _, TabFrame in ScrollTab:GetChildren() do
                     if TabFrame.Name == "Tab" then
-                        local tabGrad = TabFrame:FindFirstChild("UIGradient")
-                        local tabStroke = TabFrame:FindFirstChild("UIStroke")
                         local tabName = TabFrame:FindFirstChild("TabName")
                         TweenService:Create(
                             TabFrame,
-                            TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.InOut),
-                            { BackgroundTransparency = 0.9 }
+                            TweenInfo.new(0.2),
+                            { BackgroundTransparency = 0.95 }
                         ):Play()
-                        if tabGrad then
-                            TweenService:Create(tabGrad, TweenInfo.new(0.3), {
-                                Transparency = NumberSequence.new({
-                                    NumberSequenceKeypoint.new(0.0, 0.9),
-                                    NumberSequenceKeypoint.new(1.0, 0.95)
-                                })
-                            }):Play()
-                        end
-                        if tabStroke then
-                            TweenService:Create(tabStroke, TweenInfo.new(0.3), {Transparency = 0.9}):Play()
-                        end
                         if tabName then
-                            TweenService:Create(tabName, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(100, 100, 100)}):Play()
+                            TweenService:Create(tabName, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play()
                         end
                     end
                 end
-                local activeGrad = Tab:FindFirstChild("UIGradient")
-                local activeStroke = Tab:FindFirstChild("UIStroke")
                 TweenService:Create(
                     Tab,
-                    TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.InOut),
-                    { BackgroundTransparency = 0.75 }
+                    TweenInfo.new(0.2),
+                    { BackgroundTransparency = 0 }
                 ):Play()
-                if activeGrad then
-                    TweenService:Create(activeGrad, TweenInfo.new(0.6), {
-                        Transparency = NumberSequence.new({
-                            NumberSequenceKeypoint.new(0.0, 0.75),
-                            NumberSequenceKeypoint.new(1.0, 0.8)
-                        })
-                    }):Play()
-                end
-                if activeStroke then
-                    TweenService:Create(activeStroke, TweenInfo.new(0.6), {Transparency = 0.7}):Play()
-                end
-                TweenService:Create(TabName, TweenInfo.new(0.6), {TextColor3 = Color3.fromRGB(0, 0, 0)}):Play()
+                TweenService:Create(TabName, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(30, 30, 30)}):Play()
                 TweenService:Create(
                     FrameChoose,
                     TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
@@ -1514,40 +1353,19 @@ function Vyper:Window(GuiConfig)
             local FeatureImg = Instance.new("ImageLabel");
             local SectionTitle = Instance.new("TextLabel");
 
-            -- iPhone LiquidGlass Section - Hitam Putih
+            -- Clean Section
             SectionReal.AnchorPoint = Vector2.new(0.5, 0)
             SectionReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            SectionReal.BackgroundTransparency = 0.8 -- Glass effect
+            SectionReal.BackgroundTransparency = 0
             SectionReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
             SectionReal.BorderSizePixel = 0
             SectionReal.LayoutOrder = 1
             SectionReal.Position = UDim2.new(0.5, 0, 0, 0)
-            SectionReal.Size = UDim2.new(1, 1, 0, 36) -- Taller untuk iPhone style
+            SectionReal.Size = UDim2.new(1, 1, 0, 32)
             SectionReal.Name = "SectionReal"
             SectionReal.Parent = Section
-            
-            -- Glass gradient untuk section
-            local SectionGradient = Instance.new("UIGradient")
-            SectionGradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 255, 255)),
-                ColorSequenceKeypoint.new(1.0, Color3.fromRGB(220, 220, 220))
-            })
-            SectionGradient.Transparency = NumberSequence.new({
-                NumberSequenceKeypoint.new(0.0, 0.8),
-                NumberSequenceKeypoint.new(1.0, 0.85)
-            })
-            SectionGradient.Rotation = 0
-            SectionGradient.Parent = SectionReal
-            
-            -- Border stroke untuk depth
-            local SectionStroke = Instance.new("UIStroke")
-            SectionStroke.Color = Color3.fromRGB(0, 0, 0)
-            SectionStroke.Thickness = 1.5
-            SectionStroke.Transparency = 0.7
-            SectionStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            SectionStroke.Parent = SectionReal
 
-            UICorner.CornerRadius = UDim.new(0, 8) -- iPhone style rounded
+            UICorner.CornerRadius = UDim.new(0, 6)
             UICorner.Parent = SectionReal
 
             SectionButton.Font = Enum.Font.SourceSans
@@ -1584,19 +1402,19 @@ function Vyper:Window(GuiConfig)
             FeatureImg.Name = "FeatureImg"
             FeatureImg.Parent = FeatureFrame
 
-            -- iPhone Style Section Title - Hitam Putih
+            -- Clean Section Title
             SectionTitle.Font = Enum.Font.GothamBold
             SectionTitle.Text = Title
-            SectionTitle.TextColor3 = Color3.fromRGB(0, 0, 0) -- Hitam untuk kontras
-            SectionTitle.TextSize = 14
+            SectionTitle.TextColor3 = Color3.fromRGB(30, 30, 30)
+            SectionTitle.TextSize = 13
             SectionTitle.TextXAlignment = Enum.TextXAlignment.Left
             SectionTitle.TextYAlignment = Enum.TextYAlignment.Top
             SectionTitle.AnchorPoint = Vector2.new(0, 0.5)
             SectionTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            SectionTitle.BackgroundTransparency = 0.9990000128746033
+            SectionTitle.BackgroundTransparency = 1
             SectionTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
             SectionTitle.BorderSizePixel = 0
-            SectionTitle.Position = UDim2.new(0, 12, 0.5, 0)
+            SectionTitle.Position = UDim2.new(0, 10, 0.5, 0)
             SectionTitle.Size = UDim2.new(1, -50, 0, 13)
             SectionTitle.Name = "SectionTitle"
             SectionTitle.Parent = SectionReal
@@ -1612,11 +1430,10 @@ function Vyper:Window(GuiConfig)
 
             UICorner1.Parent = SectionDecideFrame
 
-            -- iPhone Style Divider - Hitam Putih
+            -- Clean Divider
             UIGradient.Color = ColorSequence.new {
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),   -- Hitam
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 100, 100)), -- Gray
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 0, 0))    -- Hitam
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(230, 230, 230)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(230, 230, 230))
             }
             UIGradient.Parent = SectionDecideFrame
 
@@ -2029,63 +1846,40 @@ function Vyper:Window(GuiConfig)
                 ButtonConfig.SubTitle = ButtonConfig.SubTitle or nil
                 ButtonConfig.SubCallback = ButtonConfig.SubCallback or function() end
 
-                -- iPhone LiquidGlass Button - Hitam Putih
+                -- Clean Button
                 local Button = Instance.new("Frame")
                 Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Button.BackgroundTransparency = 0.8 -- Glass effect
-                Button.Size = UDim2.new(1, 0, 0, 42)
+                Button.BackgroundTransparency = 0
+                Button.Size = UDim2.new(1, 0, 0, 38)
                 Button.LayoutOrder = CountItem
                 Button.Parent = SectionAdd
-                
-                -- Glass gradient
-                local ButtonGradient = Instance.new("UIGradient")
-                ButtonGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 220))
-                })
-                ButtonGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0.8),
-                    NumberSequenceKeypoint.new(1, 0.85)
-                })
-                ButtonGradient.Rotation = 0
-                ButtonGradient.Parent = Button
-                
-                -- Border stroke
-                local ButtonStroke = Instance.new("UIStroke")
-                ButtonStroke.Color = Color3.fromRGB(0, 0, 0)
-                ButtonStroke.Thickness = 1.5
-                ButtonStroke.Transparency = 0.7
-                ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                ButtonStroke.Parent = Button
 
                 local UICorner = Instance.new("UICorner")
-                UICorner.CornerRadius = UDim.new(0, 8)
+                UICorner.CornerRadius = UDim.new(0, 6)
                 UICorner.Parent = Button
 
                 local MainButton = Instance.new("TextButton")
                 MainButton.Font = Enum.Font.GothamBold
                 MainButton.Text = ButtonConfig.Title
                 MainButton.TextSize = 13
-                MainButton.TextColor3 = Color3.fromRGB(0, 0, 0) -- Hitam
-                MainButton.TextTransparency = 0.1
-                MainButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                MainButton.BackgroundTransparency = 0.9
-                MainButton.Size = ButtonConfig.SubTitle and UDim2.new(0.5, -8, 1, -10) or UDim2.new(1, -12, 1, -10)
-                MainButton.Position = UDim2.new(0, 6, 0, 5)
+                MainButton.TextColor3 = Color3.fromRGB(30, 30, 30)
+                MainButton.TextTransparency = 0
+                MainButton.BackgroundColor3 = Color3.fromRGB(250, 250, 250)
+                MainButton.BackgroundTransparency = 0
+                MainButton.Size = ButtonConfig.SubTitle and UDim2.new(0.5, -8, 1, -8) or UDim2.new(1, -10, 1, -8)
+                MainButton.Position = UDim2.new(0, 5, 0, 4)
                 MainButton.Parent = Button
 
                 local mainCorner = Instance.new("UICorner")
-                mainCorner.CornerRadius = UDim.new(0, 6)
+                mainCorner.CornerRadius = UDim.new(0, 5)
                 mainCorner.Parent = MainButton
                 
-                -- Hover effect
+                -- Simple hover
                 MainButton.MouseEnter:Connect(function()
-                    TweenService:Create(MainButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.8}):Play()
-                    TweenService:Create(ButtonStroke, TweenInfo.new(0.2), {Transparency = 0.5}):Play()
+                    TweenService:Create(MainButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(245, 245, 245)}):Play()
                 end)
                 MainButton.MouseLeave:Connect(function()
-                    TweenService:Create(MainButton, TweenInfo.new(0.2), {BackgroundTransparency = 0.9}):Play()
-                    TweenService:Create(ButtonStroke, TweenInfo.new(0.2), {Transparency = 0.7}):Play()
+                    TweenService:Create(MainButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(250, 250, 250)}):Play()
                 end)
 
                 MainButton.MouseButton1Click:Connect(ButtonConfig.Callback)
@@ -2139,36 +1933,15 @@ function Vyper:Window(GuiConfig)
                 local ToggleCircle = Instance.new("Frame")
                 local UICorner23 = Instance.new("UICorner")
 
-                -- iPhone LiquidGlass Toggle - Hitam Putih
+                -- Clean Toggle
                 Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Toggle.BackgroundTransparency = 0.8 -- Glass effect
+                Toggle.BackgroundTransparency = 0
                 Toggle.BorderSizePixel = 0
                 Toggle.LayoutOrder = CountItem
                 Toggle.Name = "Toggle"
                 Toggle.Parent = SectionAdd
-                
-                -- Glass gradient
-                local ToggleGradient = Instance.new("UIGradient")
-                ToggleGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 220))
-                })
-                ToggleGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0.8),
-                    NumberSequenceKeypoint.new(1, 0.85)
-                })
-                ToggleGradient.Rotation = 0
-                ToggleGradient.Parent = Toggle
-                
-                -- Border stroke
-                local ToggleBorderStroke = Instance.new("UIStroke")
-                ToggleBorderStroke.Color = Color3.fromRGB(0, 0, 0)
-                ToggleBorderStroke.Thickness = 1.5
-                ToggleBorderStroke.Transparency = 0.7
-                ToggleBorderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                ToggleBorderStroke.Parent = Toggle
 
-                UICorner20.CornerRadius = UDim.new(0, 8)
+                UICorner20.CornerRadius = UDim.new(0, 6)
                 UICorner20.Parent = Toggle
 
                 ToggleTitle.Font = Enum.Font.GothamBold
@@ -2344,43 +2117,22 @@ function Vyper:Window(GuiConfig)
                 local UIStroke6 = Instance.new("UIStroke");
                 local UIStroke7 = Instance.new("UIStroke");
 
-                -- iPhone LiquidGlass Slider - Hitam Putih
+                -- Clean Slider
                 Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Slider.BackgroundTransparency = 0.8 -- Glass effect
+                Slider.BackgroundTransparency = 0
                 Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Slider.BorderSizePixel = 0
                 Slider.LayoutOrder = CountItem
-                Slider.Size = UDim2.new(1, 0, 0, 48)
+                Slider.Size = UDim2.new(1, 0, 0, 46)
                 Slider.Name = "Slider"
                 Slider.Parent = SectionAdd
-                
-                -- Glass gradient
-                local SliderGradient = Instance.new("UIGradient")
-                SliderGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(220, 220, 220))
-                })
-                SliderGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0.8),
-                    NumberSequenceKeypoint.new(1, 0.85)
-                })
-                SliderGradient.Rotation = 0
-                SliderGradient.Parent = Slider
-                
-                -- Border stroke
-                local SliderBorderStroke = Instance.new("UIStroke")
-                SliderBorderStroke.Color = Color3.fromRGB(0, 0, 0)
-                SliderBorderStroke.Thickness = 1.5
-                SliderBorderStroke.Transparency = 0.7
-                SliderBorderStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                SliderBorderStroke.Parent = Slider
 
-                UICorner15.CornerRadius = UDim.new(0, 8)
+                UICorner15.CornerRadius = UDim.new(0, 6)
                 UICorner15.Parent = Slider
 
                 SliderTitle.Font = Enum.Font.GothamBold
                 SliderTitle.Text = SliderConfig.Title
-                SliderTitle.TextColor3 = Color3.fromRGB(0, 0, 0) -- Hitam untuk kontras
+                SliderTitle.TextColor3 = Color3.fromRGB(30, 30, 30)
                 SliderTitle.TextSize = 13
                 SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
                 SliderTitle.TextYAlignment = Enum.TextYAlignment.Top
@@ -2395,9 +2147,9 @@ function Vyper:Window(GuiConfig)
 
                 SliderContent.Font = Enum.Font.GothamBold
                 SliderContent.Text = SliderConfig.Content
-                SliderContent.TextColor3 = Color3.fromRGB(100, 100, 100) -- Gray untuk secondary text
+                SliderContent.TextColor3 = Color3.fromRGB(150, 150, 150)
                 SliderContent.TextSize = 12
-                SliderContent.TextTransparency = 0.2
+                SliderContent.TextTransparency = 0
                 SliderContent.TextXAlignment = Enum.TextXAlignment.Left
                 SliderContent.TextYAlignment = Enum.TextYAlignment.Bottom
                 SliderContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2461,9 +2213,9 @@ function Vyper:Window(GuiConfig)
 
                 UICorner17.Parent = SliderFrame
 
-                -- iPhone Style Slider Fill - Hitam
+                -- Clean Slider Fill
                 SliderDraggable.AnchorPoint = Vector2.new(0, 0.5)
-                SliderDraggable.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                SliderDraggable.BackgroundColor3 = GuiConfig.Color
                 SliderDraggable.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 SliderDraggable.BorderSizePixel = 0
                 SliderDraggable.Position = UDim2.new(0, 0, 0.5, 0)
@@ -2473,7 +2225,7 @@ function Vyper:Window(GuiConfig)
 
                 UICorner18.Parent = SliderDraggable
 
-                -- iPhone Style Slider Circle - Putih dengan border hitam
+                -- Clean Slider Circle
                 SliderCircle.AnchorPoint = Vector2.new(1, 0.5)
                 SliderCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 SliderCircle.BorderColor3 = Color3.fromRGB(0, 0, 0)

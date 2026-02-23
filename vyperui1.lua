@@ -98,7 +98,7 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
-local viewport = (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize) or Vector2.new(1920, 1080)
+local viewport = workspace.CurrentCamera.ViewportSize
 
 local function isMobileDevice()
     return UserInputService.TouchEnabled
@@ -121,12 +121,14 @@ local function safeSize(pxWidth, pxHeight)
 end
 
 local function MakeDraggable(topbarobject, object)
+    if not topbarobject or not object then return end
     local function CustomPos(topbarobject, object)
         local Dragging, DragInput, DragStart, StartPosition
 
         local function UpdatePos(input)
-            if not StartPosition or not object or not object.Parent then return end
-            if not input or not input.Position then return end
+            if not object or not object.Parent then return end
+            if not StartPosition or not StartPosition.X or not StartPosition.Y then return end
+            if not DragStart or not input or not input.Position then return end
             local Delta = input.Position - DragStart
             local pos = UDim2.new(
                 StartPosition.X.Scale,
@@ -134,8 +136,11 @@ local function MakeDraggable(topbarobject, object)
                 StartPosition.Y.Scale,
                 StartPosition.Y.Offset + Delta.Y
             )
-            local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Position = pos })
-            Tween:Play()
+            local ok, err = pcall(function()
+                local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Position = pos })
+                Tween:Play()
+            end)
+            if not ok then return end
         end
 
         topbarobject.InputBegan:Connect(function(input)
@@ -190,8 +195,9 @@ local function MakeDraggable(topbarobject, object)
         changesizeobject.Parent = object
 
         local function UpdateSize(input)
-            if not StartSize or not object or not object.Parent then return end
-            if not input or not input.Position then return end
+            if not object or not object.Parent then return end
+            if not StartSize or not StartSize.X or not StartSize.Y then return end
+            if not DragStart or not input or not input.Position then return end
             local Delta = input.Position - DragStart
             local newWidth = StartSize.X.Offset + Delta.X
             local newHeight = StartSize.Y.Offset + Delta.Y
@@ -199,8 +205,10 @@ local function MakeDraggable(topbarobject, object)
             newWidth = math.max(newWidth, minSizeX)
             newHeight = math.max(newHeight, minSizeY)
 
-            local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Size = UDim2.new(0, newWidth, 0, newHeight) })
-            Tween:Play()
+            pcall(function()
+                local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Size = UDim2.new(0, newWidth, 0, newHeight) })
+                Tween:Play()
+            end)
         end
 
         changesizeobject.InputBegan:Connect(function(input)
@@ -557,9 +565,32 @@ function Vyper:Window(GuiConfig)
         Main.BackgroundTransparency = 1
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
-        -- Professional Solid Background
-        Main.BackgroundColor3 = Color3.fromRGB(250, 250, 250) -- Solid light background
-        Main.BackgroundTransparency = 0 -- Fully opaque
+        Main.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Dark base for gradient
+        Main.BackgroundTransparency = 0.15
+        
+        -- Add purple-cyan gradient overlay for 3D modern look
+        local GradientOverlay = Instance.new("Frame")
+        GradientOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        GradientOverlay.BackgroundTransparency = 0.3
+        GradientOverlay.BorderSizePixel = 0
+        GradientOverlay.Size = UDim2.new(1, 0, 1, 0)
+        GradientOverlay.ZIndex = 1
+        GradientOverlay.Name = "GradientOverlay"
+        
+        local MainGradient = Instance.new("UIGradient")
+        MainGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(80, 40, 120)),   -- Dark purple
+            ColorSequenceKeypoint.new(0.3, Color3.fromRGB(138, 43, 226)),  -- Purple
+            ColorSequenceKeypoint.new(0.7, Color3.fromRGB(100, 150, 255)), -- Cyan-blue
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 240, 255))  -- Bright cyan
+        })
+        MainGradient.Rotation = 135 -- Diagonal gradient like logo
+        MainGradient.Parent = GradientOverlay
+        
+        local GradientCorner = Instance.new("UICorner")
+        GradientCorner.Parent = GradientOverlay
+        
+        GradientOverlay.Parent = Main
     end
 
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -570,85 +601,57 @@ function Vyper:Window(GuiConfig)
     Main.Name = "Main"
     Main.Parent = DropShadow
 
-    UICorner.CornerRadius = UDim.new(0, 10)
     UICorner.Parent = Main
 
-    -- Professional Top Bar
-    Top.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Top.BackgroundTransparency = 0
+    Top.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Top.BackgroundTransparency = 0.9990000128746033
     Top.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Top.BorderSizePixel = 0
-    Top.Size = UDim2.new(1, 0, 0, 42)
+    Top.Size = UDim2.new(1, 0, 0, 38)
     Top.Name = "Top"
     Top.Parent = Main
-    
-    -- Professional border separator
-    local TopBorder = Instance.new("Frame")
-    TopBorder.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-    TopBorder.BackgroundTransparency = 0
-    TopBorder.BorderSizePixel = 0
-    TopBorder.Size = UDim2.new(1, 0, 0, 1)
-    TopBorder.Position = UDim2.new(0, 0, 1, -1)
-    TopBorder.ZIndex = 10
-    TopBorder.Name = "TopBorder"
-    TopBorder.Parent = Top
 
-    -- Professional Title
     TextLabel.Font = Enum.Font.GothamBold
     TextLabel.Text = GuiConfig.Title
-    TextLabel.TextColor3 = Color3.fromRGB(25, 25, 25)
-    TextLabel.TextSize = 15
+    TextLabel.TextColor3 = GuiConfig.Color
+    TextLabel.TextSize = 14
     TextLabel.TextXAlignment = Enum.TextXAlignment.Left
     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.BackgroundTransparency = 1
+    TextLabel.BackgroundTransparency = 0.9990000128746033
     TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel.BorderSizePixel = 0
     TextLabel.Size = UDim2.new(1, -100, 1, 0)
-    TextLabel.Position = UDim2.new(0, 14, 0, 0)
+    TextLabel.Position = UDim2.new(0, 10, 0, 0)
     TextLabel.Parent = Top
 
     UICorner1.Parent = Top
 
-    -- Professional Footer
-    TextLabel1.Font = Enum.Font.Gotham
+    TextLabel1.Font = Enum.Font.GothamBold
     TextLabel1.Text = GuiConfig.Footer
-    TextLabel1.TextColor3 = Color3.fromRGB(140, 140, 140)
-    TextLabel1.TextSize = 13
+    TextLabel1.TextColor3 = GuiConfig.Color
+    TextLabel1.TextSize = 14
     TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
     TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel1.BackgroundTransparency = 1
+    TextLabel1.BackgroundTransparency = 0.9990000128746033
     TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel1.BorderSizePixel = 0
     TextLabel1.Size = UDim2.new(1, -(TextLabel.TextBounds.X + 104), 1, 0)
-    TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 16, 0, 0)
+    TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 15, 0, 0)
     TextLabel1.Parent = Top
 
-    -- Professional Close Button
     Close.Font = Enum.Font.SourceSans
     Close.Text = ""
     Close.TextColor3 = Color3.fromRGB(0, 0, 0)
     Close.TextSize = 14
     Close.AnchorPoint = Vector2.new(1, 0.5)
-    Close.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-    Close.BackgroundTransparency = 0
+    Close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Close.BackgroundTransparency = 0.9990000128746033
     Close.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Close.BorderSizePixel = 0
-    Close.Position = UDim2.new(1, -10, 0.5, 0)
-    Close.Size = UDim2.new(0, 30, 0, 30)
+    Close.Position = UDim2.new(1, -8, 0.5, 0)
+    Close.Size = UDim2.new(0, 25, 0, 25)
     Close.Name = "Close"
     Close.Parent = Top
-    
-    local CloseCorner = Instance.new("UICorner")
-    CloseCorner.CornerRadius = UDim.new(0, 6)
-    CloseCorner.Parent = Close
-    
-    -- Professional hover effect
-    Close.MouseEnter:Connect(function()
-        TweenService:Create(Close, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(235, 235, 235)}):Play()
-    end)
-    Close.MouseLeave:Connect(function()
-        TweenService:Create(Close, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(245, 245, 245)}):Play()
-    end)
 
     ImageLabel1.Image = "rbxassetid://9886659671"
     ImageLabel1.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -660,32 +663,19 @@ function Vyper:Window(GuiConfig)
     ImageLabel1.Size = UDim2.new(1, -8, 1, -8)
     ImageLabel1.Parent = Close
 
-    -- Professional Minimize Button
     Min.Font = Enum.Font.SourceSans
     Min.Text = ""
     Min.TextColor3 = Color3.fromRGB(0, 0, 0)
     Min.TextSize = 14
     Min.AnchorPoint = Vector2.new(1, 0.5)
-    Min.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-    Min.BackgroundTransparency = 0
+    Min.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Min.BackgroundTransparency = 0.9990000128746033
     Min.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Min.BorderSizePixel = 0
-    Min.Position = UDim2.new(1, -44, 0.5, 0)
-    Min.Size = UDim2.new(0, 30, 0, 30)
+    Min.Position = UDim2.new(1, -38, 0.5, 0)
+    Min.Size = UDim2.new(0, 25, 0, 25)
     Min.Name = "Min"
     Min.Parent = Top
-    
-    local MinCorner = Instance.new("UICorner")
-    MinCorner.CornerRadius = UDim.new(0, 6)
-    MinCorner.Parent = Min
-    
-    -- Professional hover effect
-    Min.MouseEnter:Connect(function()
-        TweenService:Create(Min, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(235, 235, 235)}):Play()
-    end)
-    Min.MouseLeave:Connect(function()
-        TweenService:Create(Min, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(245, 245, 245)}):Play()
-    end)
 
     ImageLabel2.Image = "rbxassetid://9886659276"
     ImageLabel2.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -698,9 +688,8 @@ function Vyper:Window(GuiConfig)
     ImageLabel2.Size = UDim2.new(1, -9, 1, -9)
     ImageLabel2.Parent = Min
 
-    -- Professional Tab Container
     LayersTab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    LayersTab.BackgroundTransparency = 0
+    LayersTab.BackgroundTransparency = 0.9990000128746033
     LayersTab.BorderColor3 = Color3.fromRGB(0, 0, 0)
     LayersTab.BorderSizePixel = 0
     LayersTab.Position = UDim2.new(0, 9, 0, 50)
@@ -708,22 +697,21 @@ function Vyper:Window(GuiConfig)
     LayersTab.Name = "LayersTab"
     LayersTab.Parent = Main
 
-    UICorner2.CornerRadius = UDim.new(0, 6)
+    UICorner2.CornerRadius = UDim.new(0, 2)
     UICorner2.Parent = LayersTab
 
     DecideFrame.AnchorPoint = Vector2.new(0.5, 0)
-    DecideFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
-    DecideFrame.BackgroundTransparency = 0
+    DecideFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    DecideFrame.BackgroundTransparency = 0.85
     DecideFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DecideFrame.BorderSizePixel = 0
-    DecideFrame.Position = UDim2.new(0.5, 0, 0, 42)
+    DecideFrame.Position = UDim2.new(0.5, 0, 0, 38)
     DecideFrame.Size = UDim2.new(1, 0, 0, 1)
     DecideFrame.Name = "DecideFrame"
     DecideFrame.Parent = Main
 
-    -- Professional Content Area
     Layers.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Layers.BackgroundTransparency = 0
+    Layers.BackgroundTransparency = 0.9990000128746033
     Layers.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Layers.BorderSizePixel = 0
     Layers.Position = UDim2.new(0, GuiConfig["Tab Width"] + 18, 0, 50)
@@ -731,21 +719,20 @@ function Vyper:Window(GuiConfig)
     Layers.Name = "Layers"
     Layers.Parent = Main
 
-    UICorner6.CornerRadius = UDim.new(0, 6)
+    UICorner6.CornerRadius = UDim.new(0, 2)
     UICorner6.Parent = Layers
 
     NameTab.Font = Enum.Font.GothamBold
     NameTab.Text = ""
-    NameTab.TextColor3 = Color3.fromRGB(25, 25, 25)
-    NameTab.TextSize = 18
+    NameTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NameTab.TextSize = 24
     NameTab.TextWrapped = true
     NameTab.TextXAlignment = Enum.TextXAlignment.Left
     NameTab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    NameTab.BackgroundTransparency = 1
+    NameTab.BackgroundTransparency = 0.9990000128746033
     NameTab.BorderColor3 = Color3.fromRGB(0, 0, 0)
     NameTab.BorderSizePixel = 0
-    NameTab.Size = UDim2.new(1, 0, 0, 32)
-    NameTab.Position = UDim2.new(0, 12, 0, 0)
+    NameTab.Size = UDim2.new(1, 0, 0, 30)
     NameTab.Name = "NameTab"
     NameTab.Parent = Layers
 
@@ -821,38 +808,26 @@ function Vyper:Window(GuiConfig)
         Overlay.ZIndex = 50
         Overlay.Parent = DropShadowHolder
 
-        local Dialog = Instance.new("Frame")
+        local Dialog = Instance.new("Frame") -- Changed to Frame for gradient
         Dialog.Size = UDim2.new(0, 300, 0, 150)
         Dialog.Position = UDim2.new(0.5, -150, 0.5, -75)
         Dialog.BackgroundColor3 = Color3.fromRGB(20, 15, 30) -- Dark purple base
-        Dialog.BackgroundTransparency = 0.15 -- Match Main Window Transparency
+        Dialog.BackgroundTransparency = 0.1
         Dialog.BorderSizePixel = 0
         Dialog.ZIndex = 51
         Dialog.Parent = Overlay
         local UICorner = Instance.new("UICorner", Dialog)
         UICorner.CornerRadius = UDim.new(0, 8)
         
-        -- Add Overlay for Vibrant Gradient (Match Main Window Style)
-        local DialogOverlay = Instance.new("Frame")
-        DialogOverlay.Size = UDim2.new(1, 0, 1, 0)
-        DialogOverlay.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White base for gradient
-        DialogOverlay.BackgroundTransparency = 0.3 -- Match Main Window Overlay Transparency
-        DialogOverlay.BorderSizePixel = 0
-        DialogOverlay.ZIndex = 51 -- Same ZIndex as container, but rendered on top of background
-        DialogOverlay.Name = "DialogOverlay"
-        DialogOverlay.Parent = Dialog
-        
-        local OverlayCorner = Instance.new("UICorner", DialogOverlay)
-        OverlayCorner.CornerRadius = UDim.new(0, 8)
-
+        -- Add purple-cyan gradient to dialog
         local DialogMainGradient = Instance.new("UIGradient")
         DialogMainGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0.0, Color3.fromRGB(80, 40, 120)),
             ColorSequenceKeypoint.new(0.5, Color3.fromRGB(138, 43, 226)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(150, 240, 255))
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(100, 180, 255))
         })
         DialogMainGradient.Rotation = 135
-        DialogMainGradient.Parent = DialogOverlay
+        DialogMainGradient.Parent = Dialog
 
         local DialogGlow = Instance.new("Frame")
         DialogGlow.Size = UDim2.new(0, 310, 0, 160)
@@ -902,18 +877,18 @@ function Vyper:Window(GuiConfig)
         Yes.Size = UDim2.new(0.45, -10, 0, 35)
         Yes.Position = UDim2.new(0.05, 0, 1, -55)
         Yes.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Yes.BackgroundTransparency = 0 -- Solid to make it pop!
+        Yes.BackgroundTransparency = 0.92
         Yes.Text = "Yes"
         Yes.Font = Enum.Font.GothamBold
         Yes.TextSize = 15
         Yes.TextColor3 = Color3.fromRGB(255, 255, 255)
-        Yes.TextTransparency = 0
+        Yes.TextTransparency = 0.3
         Yes.ZIndex = 52
         Yes.Name = "Yes"
         Yes.Parent = Dialog
         Instance.new("UICorner", Yes).CornerRadius = UDim.new(0, 6)
         
-        -- Add gradient to Yes button (Vibrant)
+        -- Add gradient to Yes button
         local YesGradient = Instance.new("UIGradient")
         YesGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
@@ -921,37 +896,30 @@ function Vyper:Window(GuiConfig)
         })
         YesGradient.Rotation = 45
         YesGradient.Parent = Yes
-        
-        -- Add Stroke to Yes button for 3D pop
-        local YesStroke = Instance.new("UIStroke")
-        YesStroke.Color = Color3.fromRGB(255, 255, 255)
-        YesStroke.Thickness = 1
-        YesStroke.Transparency = 0.5
-        YesStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        YesStroke.Parent = Yes
 
         local Cancel = Instance.new("TextButton")
         Cancel.Size = UDim2.new(0.45, -10, 0, 35)
         Cancel.Position = UDim2.new(0.5, 10, 1, -55)
         Cancel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Cancel.BackgroundTransparency = 1 -- Transparent (Ghost button)
+        Cancel.BackgroundTransparency = 0.92
         Cancel.Text = "Cancel"
         Cancel.Font = Enum.Font.GothamBold
         Cancel.TextSize = 15
-        Cancel.TextColor3 = Color3.fromRGB(200, 200, 200)
-        Cancel.TextTransparency = 0
+        Cancel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Cancel.TextTransparency = 0.3
         Cancel.ZIndex = 52
         Cancel.Name = "Cancel"
         Cancel.Parent = Dialog
         Instance.new("UICorner", Cancel).CornerRadius = UDim.new(0, 6)
         
-        -- Add Border to Cancel button
-        local CancelStroke = Instance.new("UIStroke")
-        CancelStroke.Color = Color3.fromRGB(138, 43, 226) -- Purple border
-        CancelStroke.Thickness = 1.5
-        CancelStroke.Transparency = 0.3
-        CancelStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        CancelStroke.Parent = Cancel
+        -- Add gradient to Cancel button
+        local CancelGradient = Instance.new("UIGradient")
+        CancelGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+        })
+        CancelGradient.Rotation = 45
+        CancelGradient.Parent = Cancel
 
         Yes.MouseButton1Click:Connect(function()
             if Vyper then Vyper:Destroy() end
@@ -1210,22 +1178,20 @@ function Vyper:Window(GuiConfig)
         local UIStroke2 = Instance.new("UIStroke");
         local UICorner4 = Instance.new("UICorner");
 
-        -- iPhone LiquidGlass Tab - Hitam Putih
-        -- Professional Tab
         Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         if CountTab == 0 then
-            Tab.BackgroundTransparency = 0
+            Tab.BackgroundTransparency = 0.9200000166893005
         else
-            Tab.BackgroundTransparency = 0.92
+            Tab.BackgroundTransparency = 0.9990000128746033
         end
         Tab.BorderColor3 = Color3.fromRGB(0, 0, 0)
         Tab.BorderSizePixel = 0
         Tab.LayoutOrder = CountTab
-        Tab.Size = UDim2.new(1, 0, 0, 34)
+        Tab.Size = UDim2.new(1, 0, 0, 30)
         Tab.Name = "Tab"
         Tab.Parent = ScrollTab
 
-        UICorner3.CornerRadius = UDim.new(0, 6)
+        UICorner3.CornerRadius = UDim.new(0, 4)
         UICorner3.Parent = Tab
 
         TabButton.Font = Enum.Font.GothamBold
@@ -1241,18 +1207,17 @@ function Vyper:Window(GuiConfig)
         TabButton.Name = "TabButton"
         TabButton.Parent = Tab
 
-        -- Professional Tab Name
         TabName.Font = Enum.Font.GothamBold
         TabName.Text = "| " .. tostring(TabConfig.Name)
-        TabName.TextColor3 = CountTab == 0 and Color3.fromRGB(25, 25, 25) or Color3.fromRGB(140, 140, 140)
-        TabName.TextSize = 14
+        TabName.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabName.TextSize = 13
         TabName.TextXAlignment = Enum.TextXAlignment.Left
         TabName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        TabName.BackgroundTransparency = 1
+        TabName.BackgroundTransparency = 0.9990000128746033
         TabName.BorderColor3 = Color3.fromRGB(0, 0, 0)
         TabName.BorderSizePixel = 0
         TabName.Size = UDim2.new(1, 0, 1, 0)
-        TabName.Position = UDim2.new(0, 32, 0, 0)
+        TabName.Position = UDim2.new(0, 30, 0, 0)
         TabName.Name = "TabName"
         TabName.Parent = Tab
 
@@ -1268,16 +1233,18 @@ function Vyper:Window(GuiConfig)
             LayersPageLayout:JumpToIndex(0)
             NameTab.Text = TabConfig.Name
             local ChooseFrame = Instance.new("Frame");
-            -- Professional Active Indicator
             ChooseFrame.BackgroundColor3 = GuiConfig.Color
             ChooseFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
             ChooseFrame.BorderSizePixel = 0
-            ChooseFrame.Position = UDim2.new(0, 2, 0, 7)
-            ChooseFrame.Size = UDim2.new(0, 3, 0, 20)
+            ChooseFrame.Position = UDim2.new(0, 2, 0, 9)
+            ChooseFrame.Size = UDim2.new(0, 1, 0, 12)
             ChooseFrame.Name = "ChooseFrame"
             ChooseFrame.Parent = Tab
 
-            UICorner4.CornerRadius = UDim.new(0, 2)
+            UIStroke2.Color = GuiConfig.Color
+            UIStroke2.Thickness = 1.600000023841858
+            UIStroke2.Parent = ChooseFrame
+
             UICorner4.Parent = ChooseFrame
         end
 
@@ -1303,23 +1270,18 @@ function Vyper:Window(GuiConfig)
             if FrameChoose ~= nil and Tab.LayoutOrder ~= LayersPageLayout.CurrentPage.LayoutOrder then
                 for _, TabFrame in ScrollTab:GetChildren() do
                     if TabFrame.Name == "Tab" then
-                        local tabName = TabFrame:FindFirstChild("TabName")
                         TweenService:Create(
                             TabFrame,
-                            TweenInfo.new(0.2),
-                            { BackgroundTransparency = 0.92 }
+                            TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.InOut),
+                            { BackgroundTransparency = 0.9990000128746033 }
                         ):Play()
-                        if tabName then
-                            TweenService:Create(tabName, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(140, 140, 140)}):Play()
-                        end
                     end
                 end
                 TweenService:Create(
                     Tab,
-                    TweenInfo.new(0.2),
-                    { BackgroundTransparency = 0 }
+                    TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.InOut),
+                    { BackgroundTransparency = 0.9200000166893005 }
                 ):Play()
-                TweenService:Create(TabName, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(25, 25, 25)}):Play()
                 TweenService:Create(
                     FrameChoose,
                     TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
@@ -1370,19 +1332,35 @@ function Vyper:Window(GuiConfig)
             local FeatureImg = Instance.new("ImageLabel");
             local SectionTitle = Instance.new("TextLabel");
 
-            -- Professional Section
             SectionReal.AnchorPoint = Vector2.new(0.5, 0)
-            SectionReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            SectionReal.BackgroundTransparency = 0
+            SectionReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- White for gradient
+            SectionReal.BackgroundTransparency = 0.92
             SectionReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
             SectionReal.BorderSizePixel = 0
             SectionReal.LayoutOrder = 1
             SectionReal.Position = UDim2.new(0.5, 0, 0, 0)
-            SectionReal.Size = UDim2.new(1, 1, 0, 35)
+            SectionReal.Size = UDim2.new(1, 1, 0, 30)
             SectionReal.Name = "SectionReal"
             SectionReal.Parent = Section
+            
+            -- Add gradient for 3D effect
+            local SectionGradient = Instance.new("UIGradient")
+            SectionGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0.0, Color3.fromRGB(100, 50, 150)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(138, 43, 226)),
+                ColorSequenceKeypoint.new(1.0, Color3.fromRGB(100, 180, 255))
+            })
+            SectionGradient.Rotation = 90
+            SectionGradient.Parent = SectionReal
+            
+            -- Add glow stroke for 3D depth
+            local SectionGlow = Instance.new("UIStroke")
+            SectionGlow.Color = Color3.fromRGB(150, 100, 255)
+            SectionGlow.Thickness = 1
+            SectionGlow.Transparency = 0.7
+            SectionGlow.Parent = SectionReal
 
-            UICorner.CornerRadius = UDim.new(0, 6)
+            UICorner.CornerRadius = UDim.new(0, 4)
             UICorner.Parent = SectionReal
 
             SectionButton.Font = Enum.Font.SourceSans
@@ -1419,20 +1397,19 @@ function Vyper:Window(GuiConfig)
             FeatureImg.Name = "FeatureImg"
             FeatureImg.Parent = FeatureFrame
 
-            -- Professional Section Title
             SectionTitle.Font = Enum.Font.GothamBold
             SectionTitle.Text = Title
-            SectionTitle.TextColor3 = Color3.fromRGB(25, 25, 25)
-            SectionTitle.TextSize = 14
+            SectionTitle.TextColor3 = Color3.fromRGB(230.77499270439148, 230.77499270439148, 230.77499270439148)
+            SectionTitle.TextSize = 13
             SectionTitle.TextXAlignment = Enum.TextXAlignment.Left
             SectionTitle.TextYAlignment = Enum.TextYAlignment.Top
             SectionTitle.AnchorPoint = Vector2.new(0, 0.5)
             SectionTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            SectionTitle.BackgroundTransparency = 1
+            SectionTitle.BackgroundTransparency = 0.9990000128746033
             SectionTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
             SectionTitle.BorderSizePixel = 0
-            SectionTitle.Position = UDim2.new(0, 12, 0.5, 0)
-            SectionTitle.Size = UDim2.new(1, -50, 0, 14)
+            SectionTitle.Position = UDim2.new(0, 10, 0.5, 0)
+            SectionTitle.Size = UDim2.new(1, -50, 0, 13)
             SectionTitle.Name = "SectionTitle"
             SectionTitle.Parent = SectionReal
 
@@ -1447,10 +1424,10 @@ function Vyper:Window(GuiConfig)
 
             UICorner1.Parent = SectionDecideFrame
 
-            -- Professional Divider
             UIGradient.Color = ColorSequence.new {
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(240, 240, 240)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(240, 240, 240))
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),   -- Purple
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150, 240, 255)), -- Bright cyan
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(138, 43, 226))    -- Purple
             }
             UIGradient.Parent = SectionDecideFrame
 
@@ -1863,41 +1840,41 @@ function Vyper:Window(GuiConfig)
                 ButtonConfig.SubTitle = ButtonConfig.SubTitle or nil
                 ButtonConfig.SubCallback = ButtonConfig.SubCallback or function() end
 
-                -- Professional Button
                 local Button = Instance.new("Frame")
                 Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Button.BackgroundTransparency = 0
+                Button.BackgroundTransparency = 0.92
                 Button.Size = UDim2.new(1, 0, 0, 40)
                 Button.LayoutOrder = CountItem
                 Button.Parent = SectionAdd
+                
+                -- Add gradient
+                local ButtonGradient = Instance.new("UIGradient")
+                ButtonGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                ButtonGradient.Rotation = 45
+                ButtonGradient.Parent = Button
 
                 local UICorner = Instance.new("UICorner")
-                UICorner.CornerRadius = UDim.new(0, 6)
+                UICorner.CornerRadius = UDim.new(0, 4)
                 UICorner.Parent = Button
 
                 local MainButton = Instance.new("TextButton")
                 MainButton.Font = Enum.Font.GothamBold
                 MainButton.Text = ButtonConfig.Title
-                MainButton.TextSize = 14
-                MainButton.TextColor3 = Color3.fromRGB(25, 25, 25)
-                MainButton.TextTransparency = 0
-                MainButton.BackgroundColor3 = Color3.fromRGB(248, 248, 248)
-                MainButton.BackgroundTransparency = 0
-                MainButton.Size = ButtonConfig.SubTitle and UDim2.new(0.5, -8, 1, -8) or UDim2.new(1, -10, 1, -8)
-                MainButton.Position = UDim2.new(0, 5, 0, 4)
+                MainButton.TextSize = 12
+                MainButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+                MainButton.TextTransparency = 0.3
+                MainButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                MainButton.BackgroundTransparency = 0.935
+                MainButton.Size = ButtonConfig.SubTitle and UDim2.new(0.5, -8, 1, -10) or UDim2.new(1, -12, 1, -10)
+                MainButton.Position = UDim2.new(0, 6, 0, 5)
                 MainButton.Parent = Button
 
                 local mainCorner = Instance.new("UICorner")
-                mainCorner.CornerRadius = UDim.new(0, 5)
+                mainCorner.CornerRadius = UDim.new(0, 4)
                 mainCorner.Parent = MainButton
-                
-                -- Professional hover
-                MainButton.MouseEnter:Connect(function()
-                    TweenService:Create(MainButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(240, 240, 240)}):Play()
-                end)
-                MainButton.MouseLeave:Connect(function()
-                    TweenService:Create(MainButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(248, 248, 248)}):Play()
-                end)
 
                 MainButton.MouseButton1Click:Connect(ButtonConfig.Callback)
 
@@ -1950,34 +1927,42 @@ function Vyper:Window(GuiConfig)
                 local ToggleCircle = Instance.new("Frame")
                 local UICorner23 = Instance.new("UICorner")
 
-                -- Professional Toggle
                 Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Toggle.BackgroundTransparency = 0
+                Toggle.BackgroundTransparency = 0.92
                 Toggle.BorderSizePixel = 0
                 Toggle.LayoutOrder = CountItem
                 Toggle.Name = "Toggle"
                 Toggle.Parent = SectionAdd
+                
+                -- Add gradient
+                local ToggleGradient = Instance.new("UIGradient")
+                ToggleGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                ToggleGradient.Rotation = 45
+                ToggleGradient.Parent = Toggle
 
-                UICorner20.CornerRadius = UDim.new(0, 6)
+                UICorner20.CornerRadius = UDim.new(0, 4)
                 UICorner20.Parent = Toggle
 
                 ToggleTitle.Font = Enum.Font.GothamBold
                 ToggleTitle.Text = ToggleConfig.Title
-                ToggleTitle.TextSize = 14
-                ToggleTitle.TextColor3 = Color3.fromRGB(25, 25, 25)
+                ToggleTitle.TextSize = 13
+                ToggleTitle.TextColor3 = Color3.fromRGB(231, 231, 231)
                 ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
                 ToggleTitle.TextYAlignment = Enum.TextYAlignment.Top
                 ToggleTitle.BackgroundTransparency = 1
-                ToggleTitle.Position = UDim2.new(0, 12, 0, 10)
-                ToggleTitle.Size = UDim2.new(1, -100, 0, 14)
+                ToggleTitle.Position = UDim2.new(0, 10, 0, 10)
+                ToggleTitle.Size = UDim2.new(1, -100, 0, 13)
                 ToggleTitle.Name = "ToggleTitle"
                 ToggleTitle.Parent = Toggle
 
                 local ToggleTitle2 = Instance.new("TextLabel")
                 ToggleTitle2.Font = Enum.Font.GothamBold
                 ToggleTitle2.Text = ToggleConfig.Title2
-                ToggleTitle2.TextSize = 13
-                ToggleTitle2.TextColor3 = Color3.fromRGB(25, 25, 25)
+                ToggleTitle2.TextSize = 12
+                ToggleTitle2.TextColor3 = Color3.fromRGB(231, 231, 231)
                 ToggleTitle2.TextXAlignment = Enum.TextXAlignment.Left
                 ToggleTitle2.TextYAlignment = Enum.TextYAlignment.Top
                 ToggleTitle2.BackgroundTransparency = 1
@@ -1986,11 +1971,11 @@ function Vyper:Window(GuiConfig)
                 ToggleTitle2.Name = "ToggleTitle2"
                 ToggleTitle2.Parent = Toggle
 
-                ToggleContent.Font = Enum.Font.Gotham
+                ToggleContent.Font = Enum.Font.GothamBold
                 ToggleContent.Text = ToggleConfig.Content
-                ToggleContent.TextColor3 = Color3.fromRGB(140, 140, 140)
-                ToggleContent.TextSize = 13
-                ToggleContent.TextTransparency = 0
+                ToggleContent.TextColor3 = Color3.fromRGB(255, 255, 255)
+                ToggleContent.TextSize = 12
+                ToggleContent.TextTransparency = 0.6
                 ToggleContent.TextXAlignment = Enum.TextXAlignment.Left
                 ToggleContent.TextYAlignment = Enum.TextYAlignment.Bottom
                 ToggleContent.BackgroundTransparency = 1
@@ -2134,23 +2119,31 @@ function Vyper:Window(GuiConfig)
                 local UIStroke6 = Instance.new("UIStroke");
                 local UIStroke7 = Instance.new("UIStroke");
 
-                -- Professional Slider
                 Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Slider.BackgroundTransparency = 0
+                Slider.BackgroundTransparency = 0.92
                 Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Slider.BorderSizePixel = 0
                 Slider.LayoutOrder = CountItem
-                Slider.Size = UDim2.new(1, 0, 0, 48)
+                Slider.Size = UDim2.new(1, 0, 0, 46)
                 Slider.Name = "Slider"
                 Slider.Parent = SectionAdd
+                
+                -- Add gradient
+                local SliderGradient = Instance.new("UIGradient")
+                SliderGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(138, 43, 226)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 180, 255))
+                })
+                SliderGradient.Rotation = 45
+                SliderGradient.Parent = Slider
 
-                UICorner15.CornerRadius = UDim.new(0, 6)
+                UICorner15.CornerRadius = UDim.new(0, 4)
                 UICorner15.Parent = Slider
 
                 SliderTitle.Font = Enum.Font.GothamBold
                 SliderTitle.Text = SliderConfig.Title
-                SliderTitle.TextColor3 = Color3.fromRGB(25, 25, 25)
-                SliderTitle.TextSize = 14
+                SliderTitle.TextColor3 = Color3.fromRGB(230.77499270439148, 230.77499270439148, 230.77499270439148)
+                SliderTitle.TextSize = 13
                 SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
                 SliderTitle.TextYAlignment = Enum.TextYAlignment.Top
                 SliderTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2162,11 +2155,11 @@ function Vyper:Window(GuiConfig)
                 SliderTitle.Name = "SliderTitle"
                 SliderTitle.Parent = Slider
 
-                SliderContent.Font = Enum.Font.Gotham
+                SliderContent.Font = Enum.Font.GothamBold
                 SliderContent.Text = SliderConfig.Content
-                SliderContent.TextColor3 = Color3.fromRGB(140, 140, 140)
-                SliderContent.TextSize = 13
-                SliderContent.TextTransparency = 0
+                SliderContent.TextColor3 = Color3.fromRGB(255, 255, 255)
+                SliderContent.TextSize = 12
+                SliderContent.TextTransparency = 0.6000000238418579
                 SliderContent.TextXAlignment = Enum.TextXAlignment.Left
                 SliderContent.TextYAlignment = Enum.TextYAlignment.Bottom
                 SliderContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -2207,7 +2200,7 @@ function Vyper:Window(GuiConfig)
 
                 TextBox.Font = Enum.Font.GothamBold
                 TextBox.Text = "90"
-                TextBox.TextColor3 = Color3.fromRGB(25, 25, 25)
+                TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 TextBox.TextSize = 13
                 TextBox.TextWrapped = true
                 TextBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -2218,21 +2211,18 @@ function Vyper:Window(GuiConfig)
                 TextBox.Size = UDim2.new(1, 0, 1, 0)
                 TextBox.Parent = SliderInput
 
-                -- Professional Slider Track
                 SliderFrame.AnchorPoint = Vector2.new(1, 0.5)
-                SliderFrame.BackgroundColor3 = Color3.fromRGB(235, 235, 235)
-                SliderFrame.BackgroundTransparency = 0
+                SliderFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                SliderFrame.BackgroundTransparency = 0.800000011920929
                 SliderFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 SliderFrame.BorderSizePixel = 0
                 SliderFrame.Position = UDim2.new(1, -20, 0.5, 0)
-                SliderFrame.Size = UDim2.new(0, 100, 0, 4)
+                SliderFrame.Size = UDim2.new(0, 100, 0, 3)
                 SliderFrame.Name = "SliderFrame"
                 SliderFrame.Parent = Slider
 
-                UICorner17.CornerRadius = UDim.new(0, 2)
                 UICorner17.Parent = SliderFrame
 
-                -- Professional Slider Fill
                 SliderDraggable.AnchorPoint = Vector2.new(0, 0.5)
                 SliderDraggable.BackgroundColor3 = GuiConfig.Color
                 SliderDraggable.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -2242,25 +2232,20 @@ function Vyper:Window(GuiConfig)
                 SliderDraggable.Name = "SliderDraggable"
                 SliderDraggable.Parent = SliderFrame
 
-                UICorner18.CornerRadius = UDim.new(0, 2)
                 UICorner18.Parent = SliderDraggable
 
-                -- Professional Slider Circle
                 SliderCircle.AnchorPoint = Vector2.new(1, 0.5)
-                SliderCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                SliderCircle.BackgroundColor3 = GuiConfig.Color
                 SliderCircle.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 SliderCircle.BorderSizePixel = 0
                 SliderCircle.Position = UDim2.new(1, 4, 0.5, 0)
-                SliderCircle.Size = UDim2.new(0, 12, 0, 12)
+                SliderCircle.Size = UDim2.new(0, 8, 0, 8)
                 SliderCircle.Name = "SliderCircle"
                 SliderCircle.Parent = SliderDraggable
 
-                UICorner19.CornerRadius = UDim.new(0, 6)
                 UICorner19.Parent = SliderCircle
 
                 UIStroke6.Color = GuiConfig.Color
-                UIStroke6.Thickness = 1.5
-                UIStroke6.Transparency = 0.4
                 UIStroke6.Parent = SliderCircle
 
                 local Dragging = false
@@ -2294,16 +2279,6 @@ function Vyper:Window(GuiConfig)
                             TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
                             { Size = UDim2.new(0, 14, 0, 14) }
                         ):Play()
-                        TweenService:Create(
-                            UIStroke6,
-                            TweenInfo.new(0.2),
-                            { Thickness = 2, Transparency = 0.2 }
-                        ):Play()
-                        TweenService:Create(
-                            UIStroke6,
-                            TweenInfo.new(0.2),
-                            { Thickness = 2, Transparency = 0.2 }
-                        ):Play()
                         local SizeScale = math.clamp(
                             (Input.Position.X - SliderFrame.AbsolutePosition.X) / SliderFrame.AbsoluteSize.X,
                             0,
@@ -2316,26 +2291,11 @@ function Vyper:Window(GuiConfig)
                 SliderFrame.InputEnded:Connect(function(Input)
                     if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                         Dragging = false
-                        TweenService:Create(
-                            SliderCircle,
-                            TweenInfo.new(0.2),
-                            { Size = UDim2.new(0, 12, 0, 12) }
-                        ):Play()
-                        TweenService:Create(
-                            UIStroke6,
-                            TweenInfo.new(0.2),
-                            { Thickness = 1.5, Transparency = 0.4 }
-                        ):Play()
                         SliderConfig.Callback(SliderFunc.Value)
                         TweenService:Create(
                             SliderCircle,
                             TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            { Size = UDim2.new(0, 12, 0, 12) }
-                        ):Play()
-                        TweenService:Create(
-                            UIStroke6,
-                            TweenInfo.new(0.2),
-                            { Thickness = 1.5, Transparency = 0.4 }
+                            { Size = UDim2.new(0, 8, 0, 8) }
                         ):Play()
                     end
                 end)
@@ -2937,3 +2897,4 @@ function Vyper:Window(GuiConfig)
 end
 
 return Vyper
+

@@ -473,6 +473,136 @@ function notif(msg, delay, color, title, desc)
     })
 end
 
+-- Loader screen (hanya ini yang kelihatan pas script jalan; window muncul setelah loading selesai)
+local function CreateLoader(config)
+    config = config or {}
+    local loadTitle = config.Title or "Vyper"
+    local accentColor = config.Color or Color3.fromRGB(138, 43, 226)
+    local loader = {}
+
+    loader.GUI = Instance.new("ScreenGui")
+    loader.GUI.Name = "VyperLoader"
+    loader.GUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    loader.GUI.ResetOnSpawn = false
+    loader.GUI.DisplayOrder = 9999
+    pcall(function() loader.GUI.Parent = CoreGui end)
+    if not loader.GUI.Parent then
+        loader.GUI.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    end
+
+    -- Fullscreen overlay (supaya cuma loader yang keliatan)
+    local overlay = Instance.new("Frame")
+    overlay.Name = "Overlay"
+    overlay.Size = UDim2.new(1, 0, 1, 0)
+    overlay.Position = UDim2.new(0, 0, 0, 0)
+    overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    overlay.BackgroundTransparency = 0.2
+    overlay.BorderSizePixel = 0
+    overlay.Parent = loader.GUI
+
+    -- Card tengah (style seperti example.lua)
+    local cardW, cardH = 300, 90
+    local card = Instance.new("Frame")
+    card.Name = "Card"
+    card.Size = UDim2.new(0, cardW, 0, cardH)
+    card.Position = UDim2.new(0.5, -cardW/2, 0.5, -cardH/2)
+    card.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+    card.BorderSizePixel = 0
+    card.Parent = loader.GUI
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = card
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = accentColor
+    stroke.Thickness = 2
+    stroke.Transparency = 0.3
+    stroke.Parent = card
+
+    -- Logo / icon
+    local iconSize = 44
+    local icon = Instance.new("ImageLabel")
+    icon.Size = UDim2.new(0, iconSize, 0, iconSize)
+    icon.Position = UDim2.new(0, 15, 0.5, -iconSize/2)
+    icon.BackgroundTransparency = 1
+    icon.Image = "rbxassetid://107726435417936"
+    icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    icon.Parent = card
+
+    -- Title
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.Text = loadTitle
+    titleLabel.TextColor3 = accentColor
+    titleLabel.TextSize = 16
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Position = UDim2.new(0, iconSize + 28, 0, 18)
+    titleLabel.Size = UDim2.new(1, -(iconSize + 50), 0, 18)
+    titleLabel.Parent = card
+
+    -- Status
+    local statusLabel = Instance.new("TextLabel")
+    statusLabel.Name = "Status"
+    statusLabel.Font = Enum.Font.Gotham
+    statusLabel.Text = "Initializing..."
+    statusLabel.TextColor3 = Color3.fromRGB(180, 180, 190)
+    statusLabel.TextSize = 12
+    statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.BackgroundTransparency = 1
+    statusLabel.Position = UDim2.new(0, iconSize + 28, 0, 38)
+    statusLabel.Size = UDim2.new(1, -(iconSize + 50), 0, 14)
+    statusLabel.Parent = card
+
+    -- Progress bar track
+    local progressBarBg = Instance.new("Frame")
+    progressBarBg.Name = "ProgressTrack"
+    progressBarBg.Size = UDim2.new(1, -40, 0, 5)
+    progressBarBg.Position = UDim2.new(0, 20, 1, -12)
+    progressBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    progressBarBg.BackgroundTransparency = 0.6
+    progressBarBg.BorderSizePixel = 0
+    progressBarBg.Parent = card
+    Instance.new("UICorner", progressBarBg).CornerRadius = UDim.new(1, 0)
+
+    local progressBar = Instance.new("Frame")
+    progressBar.Name = "ProgressFill"
+    progressBar.Size = UDim2.new(0, 0, 1, 0)
+    progressBar.Position = UDim2.new(0, 0, 0, 0)
+    progressBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    progressBar.BorderSizePixel = 0
+    progressBar.Parent = progressBarBg
+    Instance.new("UICorner", progressBar).CornerRadius = UDim.new(1, 0)
+
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 200, 255)),
+        ColorSequenceKeypoint.new(1, accentColor)
+    })
+    gradient.Parent = progressBar
+
+    function loader:Update(progress, status)
+        progress = math.clamp(progress, 0, 1)
+        TweenService:Create(progressBar, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(progress, 0, 1, 0)
+        }):Play()
+        if status and statusLabel then
+            statusLabel.Text = status
+        end
+    end
+
+    function loader:Finish()
+        self:Update(1, "Loaded Successfully")
+        task.wait(1.2)
+        if self.GUI then
+            self.GUI:Destroy()
+        end
+    end
+
+    return loader
+end
+
 function Vyper:Window(GuiConfig)
     GuiConfig              = GuiConfig or {}
     GuiConfig.Title        = GuiConfig.Title or "Vyper"
@@ -483,6 +613,9 @@ function Vyper:Window(GuiConfig)
 
     CURRENT_VERSION        = GuiConfig.Version
     LoadConfigFromFile()
+
+    -- Tampilkan loader dulu; UI utama belum keliatan
+    local loader = CreateLoader(GuiConfig)
 
     local GuiFunc = {}
 
@@ -512,7 +645,7 @@ function Vyper:Window(GuiConfig)
     Vyper.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     Vyper.Name = "Vyper"
     Vyper.ResetOnSpawn = false
-    Vyper.Parent = game:GetService("CoreGui")
+    Vyper.Parent = nil
 
     DropShadowHolder.BackgroundTransparency = 1
     DropShadowHolder.BorderSizePixel = 0
@@ -2879,7 +3012,21 @@ function Vyper:Window(GuiConfig)
         return Sections
     end
 
+    -- Loading selesai: isi progress bar, lalu tampilkan window
+    local progress = 0
+    while progress < 1 do
+        progress = math.min(1, progress + 0.025)
+        loader:Update(progress, progress < 1 and "Loading..." or "Ready")
+        task.wait(0.03)
+    end
+    loader:Finish()
+    Vyper.Parent = game:GetService("CoreGui")
+    if loader.GUI and loader.GUI.Parent then
+        loader.GUI:Destroy()
+    end
+
     return Tabs
 end
 
 return Vyper
+

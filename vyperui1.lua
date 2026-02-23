@@ -121,14 +121,10 @@ local function safeSize(pxWidth, pxHeight)
 end
 
 local function MakeDraggable(topbarobject, object)
-    if not topbarobject or not object then return end
     local function CustomPos(topbarobject, object)
         local Dragging, DragInput, DragStart, StartPosition
 
         local function UpdatePos(input)
-            if not object or not object.Parent then return end
-            if not StartPosition or not StartPosition.X or not StartPosition.Y then return end
-            if not DragStart or not input or not input.Position then return end
             local Delta = input.Position - DragStart
             local pos = UDim2.new(
                 StartPosition.X.Scale,
@@ -136,16 +132,12 @@ local function MakeDraggable(topbarobject, object)
                 StartPosition.Y.Scale,
                 StartPosition.Y.Offset + Delta.Y
             )
-            local ok, err = pcall(function()
-                local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Position = pos })
-                Tween:Play()
-            end)
-            if not ok then return end
+            local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Position = pos })
+            Tween:Play()
         end
 
         topbarobject.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                if not object or not object.Parent then return end
                 Dragging = true
                 DragStart = input.Position
                 StartPosition = object.Position
@@ -195,9 +187,6 @@ local function MakeDraggable(topbarobject, object)
         changesizeobject.Parent = object
 
         local function UpdateSize(input)
-            if not object or not object.Parent then return end
-            if not StartSize or not StartSize.X or not StartSize.Y then return end
-            if not DragStart or not input or not input.Position then return end
             local Delta = input.Position - DragStart
             local newWidth = StartSize.X.Offset + Delta.X
             local newHeight = StartSize.Y.Offset + Delta.Y
@@ -205,15 +194,12 @@ local function MakeDraggable(topbarobject, object)
             newWidth = math.max(newWidth, minSizeX)
             newHeight = math.max(newHeight, minSizeY)
 
-            pcall(function()
-                local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Size = UDim2.new(0, newWidth, 0, newHeight) })
-                Tween:Play()
-            end)
+            local Tween = TweenService:Create(object, TweenInfo.new(0.2), { Size = UDim2.new(0, newWidth, 0, newHeight) })
+            Tween:Play()
         end
 
         changesizeobject.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                if not object or not object.Parent then return end
                 Dragging = true
                 DragStart = input.Position
                 StartSize = object.Size

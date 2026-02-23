@@ -2883,4 +2883,3 @@ function Vyper:Window(GuiConfig)
 end
 
 return Vyper
-

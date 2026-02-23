@@ -98,7 +98,7 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
-local viewport = workspace.CurrentCamera.ViewportSize
+local viewport = (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize) or Vector2.new(1920, 1080)
 
 local function isMobileDevice()
     return UserInputService.TouchEnabled
@@ -125,6 +125,8 @@ local function MakeDraggable(topbarobject, object)
         local Dragging, DragInput, DragStart, StartPosition
 
         local function UpdatePos(input)
+            if not StartPosition or not object or not object.Parent then return end
+            if not input or not input.Position then return end
             local Delta = input.Position - DragStart
             local pos = UDim2.new(
                 StartPosition.X.Scale,
@@ -138,6 +140,7 @@ local function MakeDraggable(topbarobject, object)
 
         topbarobject.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                if not object or not object.Parent then return end
                 Dragging = true
                 DragStart = input.Position
                 StartPosition = object.Position
@@ -187,6 +190,8 @@ local function MakeDraggable(topbarobject, object)
         changesizeobject.Parent = object
 
         local function UpdateSize(input)
+            if not StartSize or not object or not object.Parent then return end
+            if not input or not input.Position then return end
             local Delta = input.Position - DragStart
             local newWidth = StartSize.X.Offset + Delta.X
             local newHeight = StartSize.Y.Offset + Delta.Y
@@ -200,6 +205,7 @@ local function MakeDraggable(topbarobject, object)
 
         changesizeobject.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                if not object or not object.Parent then return end
                 Dragging = true
                 DragStart = input.Position
                 StartSize = object.Size
